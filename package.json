@@ -1,0 +1,34 @@
+{
+  "name": "ipfs-repos",
+  "version": "0.0.0",
+  "description": "IPFS repository info",
+  "authors": [
+    "Harlan T Wood <code@harlantwood.net>"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "build": "browserify src/index.coffee --transform coffeeify --extension='.coffee' -g uglifyify | uglifyjs --screw-ie8 --mangle --compress dead_code,sequences,conditionals,booleans,unused,if_return,join_vars,drop_debugger > public/bundle.js",
+    "dev": "src/server/dev.coffee",
+    "publish": "npm run build && bin/publish",
+    "watch": "nodemon --watch src --watch public/*.html  --watch public/styles/* --watch ../../nodesphere/nodesphere/lib/ --exec 'browserify' src/index.coffee --transform coffeeify --extension='.coffee' --outfile public/bundle.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "browser-sync": "^2.8.0",
+    "browserify": "^11.0.0",
+    "coffee-script": "^1.9.3",
+    "coffeeify": "^1.1.0",
+    "gh-pages": "^0.5.0",
+    "lightsaber": "^0.4.1",
+    "lodash": "^3.10.0",
+    "nodemon": "^1.3.8",
+    "octokat": "^0.4.12",
+    "teacup": "^2.0.0",
+    "uglify-js": "^2.4.23",
+    "uglifyify": "^3.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ipfs/repos.git"
+  }
+}

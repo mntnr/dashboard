@@ -1,0 +1,21 @@
+#!/usr/bin/env coffee
+
+ghpages = require 'gh-pages'
+path = require 'path'
+
+handle_error = (error) ->
+  if error
+    console.error error
+    process.exit Number(error.errno) or 1
+
+dist = path.join __dirname, '..', 'dist'
+
+options =
+  logger: console.log
+  dotfiles: true
+  message: 'Update gh-pages [ci skip]'
+  user:
+    name: 'Deploy Bot'
+    email: 'deploy+bot@example.com'
+
+ghpages.publish dist, options, handle_error
