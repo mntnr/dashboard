@@ -1,6 +1,7 @@
 Octokat = require 'octokat'
 {p, log} = require 'lightsaber'
 {
+  a
   img
   raw
   render
@@ -26,10 +27,12 @@ matrix = renderable (repos) ->
         td -> circle repoName
 
 travis = renderable (repoName) ->
-  img src: "https://travis-ci.org/ipfs/#{repoName}.svg?branch=master"
+  a href: "https://travis-ci.org/ipfs/#{repoName}", ->
+    img src: "https://travis-ci.org/ipfs/#{repoName}.svg?branch=master"
 
 circle = renderable (repoName) ->
-  img src: "https://circleci.com/gh/ipfs/#{repoName}.svg?style=svg"
+  a href: "https://circleci.com/gh/ipfs/#{repoName}", ->
+    img src: "https://circleci.com/gh/ipfs/#{repoName}.svg?style=svg"
 
 show = (html) ->
   content = document.getElementById 'content'
