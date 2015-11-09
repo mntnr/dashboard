@@ -8,6 +8,7 @@ Octokat = require 'octokat'
   renderable
   table
   td
+  th
   tr
 } = require 'teacup'
 
@@ -20,6 +21,10 @@ matrix = renderable (repos) ->
   names = (repo.name for repo in repos)
   names.sort()
   table ->
+    tr ->
+      th ->
+      th -> "Travis CI"
+      th -> "Circle CI"
     for repoName in names
       tr ->
         td repoName
