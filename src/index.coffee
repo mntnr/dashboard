@@ -13,18 +13,17 @@ Octokat = require 'octokat'
 main = ->
   github = new Octokat()
   github.orgs('ipfs').repos.fetch()
-  .then (repos) ->
-    names = (repo.name for repo in repos)
-    names.sort()
-    rows = (row name for name in names)
-    html = render -> table -> raw rows.join "\n"
-    show html
+  .then (repos) -> show matrix repos
 
-row = renderable (repoName) ->
-  tr ->
-    td repoName
-    td -> travis repoName
-    td -> circle repoName
+matrix = renderable (repos) ->
+  names = (repo.name for repo in repos)
+  names.sort()
+  table ->
+    for repoName in names
+      tr ->
+        td repoName
+        td -> travis repoName
+        td -> circle repoName
 
 travis = renderable (repoName) ->
   img src: "https://travis-ci.org/ipfs/#{repoName}.svg?branch=master"
