@@ -2,6 +2,9 @@ Promise = require 'bluebird'
 Octokat = require 'octokat'
 {p, log} = require 'lightsaber'
 {sortBy} = require 'lodash'
+$ = require 'jquery'
+DataTable = require 'datatables'
+
 {
   a
   img
@@ -9,8 +12,10 @@ Octokat = require 'octokat'
   render
   renderable
   table
+  tbody
   td
   th
+  thead
   tr
 } = require 'teacup'
 
@@ -27,6 +32,7 @@ main = ->
   github.orgs('ipfs').repos.fetch()
   .then (repos) -> getReadmes repos
   .then (repos) -> show matrix repos
+  .then -> $('table').DataTable paging: false
 
 getReadmes = (repos) ->
   repos = sortBy repos, 'name'
@@ -38,21 +44,23 @@ getReadmes = (repos) ->
 
 matrix = renderable (repos) ->
   table ->
-    tr ->
-      th -> "Repository"
-      th -> "Travis CI"
-      th -> "Circle CI"
-      th -> "README"
-      for expectedName of EXPECTED
-        th -> expectedName
-    for repo in repos
+    thead ->
       tr ->
-        td repo.name
-        td -> travis repo.name
-        td -> circle repo.name
-        td -> check repo.readmeText?
-        for expectedName, expectedValue of EXPECTED
-          th -> check (repo.readmeText? and repo.readmeText?.indexOf(expectedValue) isnt -1)
+        th -> "Repository"
+        th -> "Travis CI"
+        th -> "Circle CI"
+        th -> "README"
+        for expectedName of EXPECTED
+          th -> expectedName
+    tbody ->
+      for repo in repos
+        tr ->
+          td repo.name
+          td -> travis repo.name
+          td -> circle repo.name
+          td -> check repo.readmeText?
+          for expectedName, expectedValue of EXPECTED
+            td -> check (repo.readmeText? and repo.readmeText?.indexOf(expectedValue) isnt -1)
 
 check = (success) -> if success then '✓' else '✗'
 
