@@ -10,7 +10,7 @@
     "build": "browserify src/index.coffee --transform coffeeify --extension='.coffee' -g uglifyify | uglifyjs --screw-ie8 --mangle --compress dead_code,sequences,conditionals,booleans,unused,if_return,join_vars,drop_debugger > public/bundle.js",
     "dev": "src/server/dev.coffee",
     "publish": "npm run build && bin/publish",
-    "watch": "nodemon --watch src --watch public/*.html  --watch public/styles/* --watch ../../nodesphere/nodesphere/lib/ --exec 'browserify' src/index.coffee --transform coffeeify --extension='.coffee' --outfile public/bundle.js"
+    "watch": "nodemon --watch src --watch public/*.html  --watch public/styles/* --exec 'browserify' src/index.coffee --transform coffeeify --extension='.coffee' --outfile public/bundle.js"
   },
   "dependencies": {},
   "devDependencies": {
