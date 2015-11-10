@@ -1,5 +1,5 @@
 {
-  "name": "ipfs-repos",
+  "name": "ipfs-ci-status",
   "version": "0.0.0",
   "description": "IPFS repository info",
   "authors": [
@@ -33,6 +33,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:ipfs/repos.git"
+    "url": "git@github.com:ipfs/ci-status.git"
   }
 }
