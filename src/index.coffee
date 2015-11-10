@@ -4,7 +4,6 @@ Octokat = require 'octokat'
 {sortBy} = require 'lodash'
 $ = require 'jquery'
 DataTable = require 'datatables'
-
 {
   a
   img
@@ -74,8 +73,6 @@ circle = renderable (repoName) ->
   a href: "https://circleci.com/gh/ipfs/#{repoName}", ->
     img src: "https://circleci.com/gh/ipfs/#{repoName}.svg?style=svg"
 
-show = (html) ->
-  content = document.getElementById 'content'
-  content.innerHTML = html
+show = (html) -> $('#content').html(html)
 
 main()
