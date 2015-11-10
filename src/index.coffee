@@ -14,6 +14,11 @@ Octokat = require 'octokat'
   tr
 } = require 'teacup'
 
+EXPECTED =
+  'Made By': '[![](https://img.shields.io/badge/made%20by-Protocol%20Labs-blue.svg?style=flat-square)](http://ipn.io)'
+  'Project': '[![](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](http://ipfs.io/)'
+  'IRC':     '[![](https://img.shields.io/badge/freejs-%23ipfs-blue.svg?style=flat-square)](http://webchat.freenode.net/?channels=%23ipfs)'
+
 main = ->
   github = new Octokat
     # need account, otherwise api throttled :(
@@ -38,12 +43,18 @@ matrix = renderable (repos) ->
       th -> "Travis CI"
       th -> "Circle CI"
       th -> "README"
+      for expectedName of EXPECTED
+        th -> expectedName
     for repo in repos
       tr ->
         td repo.name
         td -> travis repo.name
         td -> circle repo.name
-        td -> if repo.readmeText? then '✓' else '✗'
+        td -> check repo.readmeText?
+        for expectedName, expectedValue of EXPECTED
+          th -> check (repo.readmeText? and repo.readmeText?.indexOf(expectedValue) isnt -1)
+
+check = (success) -> if success then '✓' else '✗'
 
 travis = renderable (repoName) ->
   a href: "https://travis-ci.org/ipfs/#{repoName}", ->
