@@ -31,7 +31,6 @@ main = ->
   github.orgs('ipfs').repos.fetch()
   .then (repos) -> getReadmes repos
   .then (repos) -> show matrix repos
-  .then -> $('table').DataTable paging: false
 
 getReadmes = (repos) ->
   repos = sortBy repos, 'name'
@@ -42,7 +41,7 @@ getReadmes = (repos) ->
   .then -> repos
 
 matrix = renderable (repos) ->
-  table ->
+  table class: 'stripe', ->
     thead ->
       tr ->
         th -> "Repository"
@@ -73,6 +72,10 @@ circle = renderable (repoName) ->
   a href: "https://circleci.com/gh/ipfs/#{repoName}", ->
     img src: "https://circleci.com/gh/ipfs/#{repoName}.svg?style=svg"
 
-show = (html) -> $('#content').html(html)
+show = (html) ->
+  $('#content').html(html)
+  $('table').DataTable
+    paging: false
+    searching: false
 
 main()
