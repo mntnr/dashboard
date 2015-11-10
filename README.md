@@ -4,7 +4,11 @@
 [![](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](http://ipfs.io/)
 [![](https://img.shields.io/badge/freejs-%23ipfs-blue.svg?style=flat-square)](http://webchat.freenode.net/?channels=%23ipfs)
 
-Later this will be hosted via IPNS.  For now, check out the latest here: <http://ipfs.github.io/ci-status/>.
+![](https://cdn.rawgit.com/jbenet/contribute-ipfs-gif/master/img/contribute.gif)
+
+For now, check out the latest here: <http://ipfs.github.io/ci-status/>.
+
+Later this will be hosted via IPNS.
 
 ## Local Development
 
