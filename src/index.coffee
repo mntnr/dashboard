@@ -10,6 +10,7 @@ DataTable = require 'datatables'
   raw
   render
   renderable
+  span
   table
   tbody
   td
@@ -62,7 +63,11 @@ matrix = renderable (repos) ->
           for expectedName, expectedValue of EXPECTED
             td -> check (repo.readmeText? and repo.readmeText?.indexOf(expectedValue) isnt -1)
 
-check = (success) -> if success then '✓' else '✗'
+check = renderable (success) ->
+  if success
+    span class: 'success', -> '✓'
+  else
+    span class: 'failure', -> '✗'
 
 travis = renderable (repoName) ->
   a href: "https://travis-ci.org/ipfs/#{repoName}", ->
