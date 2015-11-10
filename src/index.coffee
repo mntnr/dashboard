@@ -55,7 +55,9 @@ matrix = renderable (repos) ->
     tbody ->
       for repo in repos
         tr ->
-          td repo.name
+          td ->
+            a href: "https://github.com/ipfs/#{repo.name}", ->
+              repo.name
           td -> travis repo.name
           td -> circle repo.name
           td -> check repo.readmeText?
