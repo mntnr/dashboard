@@ -42,7 +42,7 @@ getReadmes = (repos) ->
   .then -> repos
 
 matrix = renderable (repos) ->
-  table class: 'stripe', ->
+  table class: 'stripe order-column compact cell-border', ->
     thead ->
       tr ->
         th -> "Repository"
