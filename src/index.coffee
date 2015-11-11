@@ -1,7 +1,7 @@
 Promise = require 'bluebird'
 Octokat = require 'octokat'
 {p, log} = require 'lightsaber'
-{sortBy} = require 'lodash'
+{size, sortBy} = require 'lodash'
 $ = require 'jquery'
 DataTable = require 'datatables'
 {
@@ -45,10 +45,16 @@ matrix = renderable (repos) ->
   table class: 'stripe order-column compact cell-border', ->
     thead ->
       tr ->
+        th ->
+        th colspan: 2, -> "Builds"
+        th colspan: 2, -> "README"
+        th colspan: size(EXPECTED), -> "Badges"
+      tr ->
         th class: 'left', -> "IPFS Repo"
         th class: 'left', -> "Travis CI"
         th class: 'left', -> "Circle CI"
-        th -> "README"
+        th -> "exists"
+        th -> "> 500 chars"
         for expectedName of EXPECTED
           th -> expectedName
     tbody ->
@@ -59,6 +65,7 @@ matrix = renderable (repos) ->
           td class: 'left', -> travis repo.name
           td class: 'left', -> circle repo.name
           td -> check repo.readmeText?
+          td -> check(repo.readmeText? and repo.readmeText.length > 500)
           for expectedName, expectedValue of EXPECTED
             td -> check (repo.readmeText? and repo.readmeText?.indexOf(expectedValue) isnt -1)
 
