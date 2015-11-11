@@ -1,7 +1,8 @@
 Promise = require 'bluebird'
 Octokat = require 'octokat'
+request = require 'request-promise'
 {p, log} = require 'lightsaber'
-{merge, size, sortBy} = require 'lodash'
+{merge, sample, size, sortBy} = require 'lodash'
 $ = require 'jquery'
 DataTable = require 'datatables'
 {
@@ -19,9 +20,17 @@ DataTable = require 'datatables'
   tr
 } = require 'teacup'
 
+ORG = 'ipfs'
+
+RAW_GITHUB_SOURCES = [
+  (repoName, path) -> "https://raw.githubusercontent.com/#{ORG}/#{repoName}/master/#{path}"
+  (repoName, path) -> "https://raw.githack.com/#{ORG}/#{repoName}/master/#{path}"
+  (repoName, path) -> "https://rawgit.com/#{ORG}/#{repoName}/master/#{path}"
+]
+
 README_BADGES =
-  'Travis': (repo) -> "[![Travis CI](https://travis-ci.org/ipfs/#{repo}.svg?branch=master)](https://travis-ci.org/ipfs/#{repo})"
-  'Circle': (repo) -> "[![Circle CI](https://circleci.com/gh/ipfs/#{repo}.svg?style=svg)](https://circleci.com/gh/ipfs/#{repo})"
+  'Travis': (repoName) -> "[![Travis CI](https://travis-ci.org//#{ORG}//#{repoName}.svg?branch=master)](https://travis-ci.org/#{ORG}/#{repoName})"
+  'Circle': (repoName) -> "[![Circle CI](https://circleci.com/gh/#{ORG}/#{repoName}.svg?style=svg)](https://circleci.com/gh/#{ORG}/#{repoName})"
   'Made By': -> '[![](https://img.shields.io/badge/made%20by-Protocol%20Labs-blue.svg?style=flat-square)](http://ipn.io)'
   'Project': -> '[![](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](http://ipfs.io/)'
   'IRC':     -> '[![](https://img.shields.io/badge/freejs-%23ipfs-blue.svg?style=flat-square)](http://webchat.freenode.net/?channels=%23ipfs)'
@@ -45,9 +54,11 @@ main = ->
 getReadmes = (repos) ->
   repos = sortBy repos, 'name'
   Promise.map repos, (repo) ->
-    repo.readme.read()
+    uri = (sample RAW_GITHUB_SOURCES)(repo.name, 'README.md')
+    request {uri}
     .then (readmeText) -> repo.readmeText = readmeText
-    .catch -> repo.readmeText = null
+    .error (err) -> console.error [".error:", uri, err].join("\n")
+    .catch (err) -> console.error [".catch:", uri, err].join("\n")
   .then -> repos
 
 matrix = renderable (repos) ->
@@ -56,7 +67,7 @@ matrix = renderable (repos) ->
       tr ->
         th ->
         th colspan: 2, -> "Builds"
-        th colspan: 2, -> "Readme"
+        th colspan: 2, -> "README.md"
         th colspan: size(README_ITEMS), -> "Badges"
       tr ->
         th class: 'left', -> "IPFS Repo"
@@ -70,7 +81,7 @@ matrix = renderable (repos) ->
       for repo in repos
         tr ->
           td class: 'left', ->
-            a href: "https://github.com/ipfs/#{repo.name}", -> repo.name
+            a href: "https://github.com/#{ORG}/#{repo.name}", -> repo.name
           td class: 'left', -> travis repo.name
           td class: 'left', -> circle repo.name
           td -> check repo.readmeText?
@@ -86,12 +97,12 @@ check = renderable (success) ->
     span class: 'failure', -> '✗'
 
 travis = renderable (repoName) ->
-  a href: "https://travis-ci.org/ipfs/#{repoName}", ->
-    img src: "https://travis-ci.org/ipfs/#{repoName}.svg?branch=master"
+  a href: "https://travis-ci.org/#{ORG}/#{repoName}", ->
+    img src: "https://travis-ci.org/#{ORG}/#{repoName}.svg?branch=master"
 
 circle = renderable (repoName) ->
-  a href: "https://circleci.com/gh/ipfs/#{repoName}", ->
-    img src: "https://circleci.com/gh/ipfs/#{repoName}.svg?style=svg"
+  a href: "https://circleci.com/gh/#{ORG}/#{repoName}", ->
+    img src: "https://circleci.com/gh/#{ORG}/#{repoName}.svg?style=svg"
 
 show = (html) ->
   $('#content').html(html)
