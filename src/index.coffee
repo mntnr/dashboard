@@ -33,7 +33,7 @@ README_ITEMS = merge README_BADGES, README_OTHER
 
 main = ->
   github = new Octokat
-    # need account, otherwise api throttled :(
+    # api throttled per account :(
     username: "irGAYpwGxP"
     password: "irGAYpwGxPfFtVLmHK84KNyjP"
     # username: "8DvrWa6nBCevZt"
