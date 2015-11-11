@@ -34,8 +34,8 @@ README_ITEMS = merge README_BADGES, README_OTHER
 main = ->
   github = new Octokat
     # api throttled per account :(
-    username: "irGAYpwGxP"
-    password: "irGAYpwGxPfFtVLmHK84KNyjP"
+    # username: "irGAYpwGxP"
+    # password: "irGAYpwGxPfFtVLmHK84KNyjP"
     # username: "8DvrWa6nBCevZt"
     # password: "wojY4o9yWyRKDN"
   github.orgs('ipfs').repos.fetch()
