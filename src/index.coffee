@@ -45,19 +45,19 @@ matrix = renderable (repos) ->
   table class: 'stripe order-column compact cell-border', ->
     thead ->
       tr ->
-        th -> "Repository"
-        th -> "Travis CI"
-        th -> "Circle CI"
+        th class: 'left', -> "IPFS Repo"
+        th class: 'left', -> "Travis CI"
+        th class: 'left', -> "Circle CI"
         th -> "README"
         for expectedName of EXPECTED
           th -> expectedName
     tbody ->
       for repo in repos
         tr ->
-          td ->
+          td class: 'left', ->
             a href: "https://github.com/ipfs/#{repo.name}", -> repo.name
-          td -> travis repo.name
-          td -> circle repo.name
+          td class: 'left', -> travis repo.name
+          td class: 'left', -> circle repo.name
           td -> check repo.readmeText?
           for expectedName, expectedValue of EXPECTED
             td -> check (repo.readmeText? and repo.readmeText?.indexOf(expectedValue) isnt -1)

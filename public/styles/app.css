@@ -5,3 +5,11 @@
 .failure {
   color: red;
 }
+
+td, th {
+  text-align: center;
+}
+
+td.left, th.left {
+  text-align: left;
+}
