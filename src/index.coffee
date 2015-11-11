@@ -1,7 +1,7 @@
 Promise = require 'bluebird'
 Octokat = require 'octokat'
 {p, log} = require 'lightsaber'
-{size, sortBy} = require 'lodash'
+{merge, size, sortBy} = require 'lodash'
 $ = require 'jquery'
 DataTable = require 'datatables'
 {
@@ -19,18 +19,25 @@ DataTable = require 'datatables'
   tr
 } = require 'teacup'
 
-EXPECTED =
+README_BADGES =
   'Travis': (repo) -> "[![Travis CI](https://travis-ci.org/ipfs/#{repo}.svg?branch=master)](https://travis-ci.org/ipfs/#{repo})"
   'Circle': (repo) -> "[![Circle CI](https://circleci.com/gh/ipfs/#{repo}.svg?style=svg)](https://circleci.com/gh/ipfs/#{repo})"
   'Made By': -> '[![](https://img.shields.io/badge/made%20by-Protocol%20Labs-blue.svg?style=flat-square)](http://ipn.io)'
   'Project': -> '[![](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](http://ipfs.io/)'
   'IRC':     -> '[![](https://img.shields.io/badge/freejs-%23ipfs-blue.svg?style=flat-square)](http://webchat.freenode.net/?channels=%23ipfs)'
 
+README_OTHER =
+  'Banner': -> '![](https://cdn.rawgit.com/jbenet/contribute-ipfs-gif/master/img/contribute.gif)'
+
+README_ITEMS = merge README_BADGES, README_OTHER
+
 main = ->
   github = new Octokat
     # need account, otherwise api throttled :(
-    username: "8DvrWa6nBCevZt"
-    password: "wojY4o9yWyRKDN"
+    username: "irGAYpwGxP"
+    password: "irGAYpwGxPfFtVLmHK84KNyjP"
+    # username: "8DvrWa6nBCevZt"
+    # password: "wojY4o9yWyRKDN"
   github.orgs('ipfs').repos.fetch()
   .then (repos) -> getReadmes repos
   .then (repos) -> show matrix repos
@@ -49,16 +56,16 @@ matrix = renderable (repos) ->
       tr ->
         th ->
         th colspan: 2, -> "Builds"
-        th colspan: 2, -> "README"
-        th colspan: size(EXPECTED), -> "Badges"
+        th colspan: 2, -> "Readme"
+        th colspan: size(README_ITEMS), -> "Badges"
       tr ->
         th class: 'left', -> "IPFS Repo"
         th class: 'left', -> "Travis CI"
         th class: 'left', -> "Circle CI"
         th -> "exists"
         th -> "> 500 chars"
-        for expectedName of EXPECTED
-          th -> expectedName
+        for name of README_ITEMS
+          th -> name
     tbody ->
       for repo in repos
         tr ->
@@ -68,9 +75,9 @@ matrix = renderable (repos) ->
           td class: 'left', -> circle repo.name
           td -> check repo.readmeText?
           td -> check(repo.readmeText? and repo.readmeText.length > 500)
-          for expectedName, expectedFunc of EXPECTED
-            p expectedValue = expectedFunc repo.name
-            td -> check (repo.readmeText? and repo.readmeText?.indexOf(expectedValue) isnt -1)
+          for name, template of README_ITEMS
+            expectedMarkdown = template repo.name
+            td -> check (repo.readmeText? and repo.readmeText?.indexOf(expectedMarkdown) isnt -1)
 
 check = renderable (success) ->
   if success
