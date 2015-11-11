@@ -20,9 +20,10 @@ DataTable = require 'datatables'
 } = require 'teacup'
 
 EXPECTED =
-  'Made By': '[![](https://img.shields.io/badge/made%20by-Protocol%20Labs-blue.svg?style=flat-square)](http://ipn.io)'
-  'Project': '[![](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](http://ipfs.io/)'
-  'IRC':     '[![](https://img.shields.io/badge/freejs-%23ipfs-blue.svg?style=flat-square)](http://webchat.freenode.net/?channels=%23ipfs)'
+  'Travis': (repo) -> "[![Travis CI](https://travis-ci.org/ipfs/#{repo}.svg?branch=master)](https://travis-ci.org/ipfs/#{repo})"
+  'Made By': -> '[![](https://img.shields.io/badge/made%20by-Protocol%20Labs-blue.svg?style=flat-square)](http://ipn.io)'
+  'Project': -> '[![](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](http://ipfs.io/)'
+  'IRC':     -> '[![](https://img.shields.io/badge/freejs-%23ipfs-blue.svg?style=flat-square)](http://webchat.freenode.net/?channels=%23ipfs)'
 
 main = ->
   github = new Octokat
@@ -66,7 +67,8 @@ matrix = renderable (repos) ->
           td class: 'left', -> circle repo.name
           td -> check repo.readmeText?
           td -> check(repo.readmeText? and repo.readmeText.length > 500)
-          for expectedName, expectedValue of EXPECTED
+          for expectedName, expectedFunc of EXPECTED
+            p expectedValue = expectedFunc repo.name
             td -> check (repo.readmeText? and repo.readmeText?.indexOf(expectedValue) isnt -1)
 
 check = renderable (success) ->
