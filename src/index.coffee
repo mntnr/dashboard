@@ -2,7 +2,7 @@ Promise = require 'bluebird'
 Octokat = require 'octokat'
 request = require 'request-promise'
 {log} = require 'lightsaber'
-{merge, sample, size, sortBy} = require 'lodash'
+{merge, round, sample, size, sortBy} = require 'lodash'
 $ = require 'jquery'
 DataTable = require 'datatables'
 {
@@ -121,6 +121,8 @@ loadStats = ->
 stats = renderable (info) ->
   {resources: {core: {limit, remaining, reset}}} = info
   div class: 'stats', ->
-    "Rate limit: #{limit} :: Remaining: #{remaining} :: Reset: #{reset}"
+    now = (new Date).getTime() / 1000  # seconds
+    minuteUntilReset = (reset - now) / 60     # minutes
+    "Rate limit: #{limit} :: Remaining: #{remaining} :: Resetting in: #{round minuteUntilReset, 1} minutes"
 
 main()
