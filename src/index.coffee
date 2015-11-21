@@ -122,7 +122,7 @@ stats = renderable (info) ->
   {resources: {core: {limit, remaining, reset}}} = info
   div class: 'stats', ->
     now = (new Date).getTime() / 1000  # seconds
-    minuteUntilReset = (reset - now) / 60     # minutes
-    "Rate limit: #{limit} :: Remaining: #{remaining} :: Resetting in: #{round minuteUntilReset, 1} minutes"
+    minutesUntilReset = (reset - now) / 60     # minutes
+    "Github API calls: #{remaining} remaining of #{limit} limit per hour; clean slate in: #{round minutesUntilReset, 1} minutes"
 
 main()
