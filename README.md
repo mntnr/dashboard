@@ -12,10 +12,6 @@ Later this will be hosted via IPNS.
 
 ## Local Development
 
-To build the javascript:
-
-    npm run build
-
 To recompile continuously:
 
     npm run watch
@@ -23,3 +19,7 @@ To recompile continuously:
 To start a development server with hot reloading:
 
     npm run dev
+
+To build minified javascript for production:
+
+    npm run build
