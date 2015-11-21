@@ -1,12 +1,13 @@
 Promise = require 'bluebird'
 Octokat = require 'octokat'
 request = require 'request-promise'
-{p, log} = require 'lightsaber'
+{log} = require 'lightsaber'
 {merge, sample, size, sortBy} = require 'lodash'
 $ = require 'jquery'
 DataTable = require 'datatables'
 {
   a
+  div
   img
   raw
   render
@@ -40,21 +41,30 @@ README_OTHER =
 
 README_ITEMS = merge README_BADGES, README_OTHER
 
+github = new Octokat
+  # api throttled per account :(
+  # username: "irGAYpwGxP"
+  # password: "irGAYpwGxPfFtVLmHK84KNyjP"
+  # username: "8DvrWa6nBCevZt"
+  # password: "wojY4o9yWyRKDN"
+
 main = ->
-  github = new Octokat
-    # api throttled per account :(
-    # username: "irGAYpwGxP"
-    # password: "irGAYpwGxPfFtVLmHK84KNyjP"
-    # username: "8DvrWa6nBCevZt"
-    # password: "wojY4o9yWyRKDN"
+  loadMatrix()
+  loadStats()
+
+loadMatrix = ->
   github.orgs('ipfs').repos.fetch()
   .then (repos) -> getReadmes repos
-  .then (repos) -> show matrix repos
+  .then (repos) ->
+    $('#matrix').append matrix repos
+    $('table').DataTable
+      paging: false
+      searching: false
 
 getReadmes = (repos) ->
   repos = sortBy repos, 'name'
   Promise.map repos, (repo) ->
-    uri = (sample RAW_GITHUB_SOURCES)(repo.name, 'README.md')
+    uri = sample(RAW_GITHUB_SOURCES)(repo.name, 'README.md')
     request {uri}
     .then (readmeText) -> repo.readmeText = readmeText
     .error (err) -> console.error [".error:", uri, err].join("\n")
@@ -104,10 +114,13 @@ circle = renderable (repoName) ->
   a href: "https://circleci.com/gh/#{ORG}/#{repoName}", ->
     img src: "https://circleci.com/gh/#{ORG}/#{repoName}.svg?style=svg"
 
-show = (html) ->
-  $('#content').html(html)
-  $('table').DataTable
-    paging: false
-    searching: false
+loadStats = ->
+  github.rateLimit.fetch()
+  .then (info) -> $('#stats').append stats info
+
+stats = renderable (info) ->
+  {resources: {core: {limit, remaining, reset}}} = info
+  div class: 'stats', ->
+    "Rate limit: #{limit} :: Remaining: #{remaining} :: Reset: #{reset}"
 
 main()
