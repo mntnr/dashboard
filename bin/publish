@@ -3,7 +3,7 @@
 ghpages = require 'gh-pages'
 path = require 'path'
 
-handle_error = (error) ->
+handleError = (error) ->
   if error
     console.error error
     process.exit Number(error.errno) or 1
@@ -18,4 +18,4 @@ options =
     name: 'Deploy Bot'
     email: 'deploy+bot@example.com'
 
-ghpages.publish dist, options, handle_error
+ghpages.publish dist, options, handleError
