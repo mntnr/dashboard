@@ -1,3 +1,9 @@
 test:
   override:
     - npm run build
+
+deployment:
+  production:
+    branch: master
+    commands:
+      - bin/publish
