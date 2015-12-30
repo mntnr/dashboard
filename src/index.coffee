@@ -25,7 +25,7 @@ ORG = 'ipfs'
 
 RAW_GITHUB_SOURCES = [
   (repoName, path) -> "https://raw.githubusercontent.com/#{ORG}/#{repoName}/master/#{path}"
-  (repoName, path) -> "https://rawgit.com/#{ORG}/#{repoName}/master/#{path}"
+  # (repoName, path) -> "https://rawgit.com/#{ORG}/#{repoName}/master/#{path}"
   # (repoName, path) -> "https://raw.githack.com/#{ORG}/#{repoName}/master/#{path}"  # funky error messages on 404
 ]
 
