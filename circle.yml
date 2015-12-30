@@ -1,5 +1,3 @@
-deployment:
-  production:
-    branch: master
-    commands:
-      - npm run publish
+test:
+  override:
+    - npm run build
