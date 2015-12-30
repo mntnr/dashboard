@@ -94,17 +94,17 @@ matrix = renderable (repos) ->
             a href: "https://github.com/#{ORG}/#{repo.name}", -> repo.name
           td class: 'left', -> travis repo.name
           td class: 'left', -> circle repo.name
-          td -> check repo.readmeText?
-          td -> check(repo.readmeText? and repo.readmeText.length > 500)
+          td class: 'no-padding', -> check repo.readmeText?
+          td class: 'no-padding', -> check(repo.readmeText? and repo.readmeText.length > 500)
           for name, template of README_ITEMS
             expectedMarkdown = template repo.name
-            td -> check (repo.readmeText? and repo.readmeText?.indexOf(expectedMarkdown) isnt -1)
+            td class: 'no-padding', -> check (repo.readmeText? and repo.readmeText?.indexOf(expectedMarkdown) isnt -1)
 
 check = renderable (success) ->
   if success
-    span class: 'success', -> '✓'
+    div class: 'success', -> '✓'
   else
-    span class: 'failure', -> '✗'
+    div class: 'failure', -> '✗'
 
 travis = renderable (repoName) ->
   a href: "https://travis-ci.org/#{ORG}/#{repoName}", ->

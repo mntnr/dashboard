@@ -1,9 +1,17 @@
 .success {
-  color: green;
+  background-color: lightgreen;
+  color: black;
+  line-height: 2em;
 }
 
 .failure {
-  color: red;
+  line-height: 2em;
+  background-color: darkred;
+  color: white;
+}
+
+td.no-padding {
+  padding: 0px !important;
 }
 
 td, th {
