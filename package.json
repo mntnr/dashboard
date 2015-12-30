@@ -2,12 +2,10 @@
   "name": "ipfs-project-repos",
   "version": "0.0.0",
   "description": "IPFS repository info",
-  "authors": [
-    "Harlan T Wood <code@harlantwood.net>"
-  ],
+  "author": "Harlan T Wood <code@harlantwood.net>",
   "license": "MIT",
   "scripts": {
-    "build": "browserify src/index.coffee --transform coffeeify --extension='.coffee' -g uglifyify | uglifyjs --mangle --compress dead_code,sequences,conditionals,booleans,unused,if_return,join_vars,drop_debugger > public/bundle.js",
+    "build": "browserify src/index.coffee --transform coffeeify --extension='.coffee' -g uglifyify | uglifyjs --mangle --compress > public/bundle.js",
     "dev": "src/server/dev.coffee",
     "publish": "npm run build && bin/publish",
     "watch": "nodemon --watch src --watch public/index.html  --watch public/styles --exec 'browserify' src/index.coffee --transform coffeeify --extension='.coffee' --outfile public/bundle.js"
