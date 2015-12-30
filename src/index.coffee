@@ -53,7 +53,7 @@ main = ->
   loadStats()
 
 loadMatrix = ->
-  github.orgs('ipfs').repos.fetch()
+  github.orgs('ipfs').repos.fetch(per_page: 100)
   .then (repos) -> getReadmes repos
   .then (repos) ->
     $('#matrix').append matrix repos
