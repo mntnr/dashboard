@@ -21,11 +21,7 @@ If you would like to have your repository listed here, please move it to the IPF
 
 ## Local Development
 
-To recompile continuously:
-
-    npm run watch
-
-To start a development server with hot reloading:
+To recompile continuously, and start a development server with hot reloading:
 
     npm run dev
 
