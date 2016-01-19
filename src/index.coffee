@@ -50,7 +50,7 @@ github = new Octokat
 
 main = ->
   loadMatrix()
-  loadStats()
+  .then => loadStats()
 
 loadMatrix = ->
   github.orgs('ipfs').repos.fetch(per_page: 100)
