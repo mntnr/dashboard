@@ -42,11 +42,6 @@ README_OTHER =
 README_ITEMS = merge README_BADGES, README_OTHER
 
 github = new Octokat
-  # api throttled per account :(
-  # username: "irGAYpwGxP"
-  # password: "irGAYpwGxPfFtVLmHK84KNyjP"
-  # username: "8DvrWa6nBCevZt"
-  # password: "wojY4o9yWyRKDN"
 
 main = ->
   loadMatrix()
