@@ -4,7 +4,8 @@ request = require 'request-promise'
 {log} = require 'lightsaber'
 {merge, round, sample, size, sortBy} = require 'lodash'
 $ = require 'jquery'
-DataTable = require 'datatables'
+require('datatables.net')()
+require('datatables.net-fixedheader')()
 {
   a
   div
@@ -55,6 +56,7 @@ loadMatrix = ->
     $('table').DataTable
       paging: false
       searching: false
+      fixedHeader: true
 
 getReadmes = (repos) ->
   repos = sortBy repos, 'name'
