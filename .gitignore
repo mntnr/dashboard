@@ -1,6 +1,7 @@
 .DS_Store
 /.env
 /public/bundle.js
+/public/styles/*.dataTables.css
 /node_modules/
 /npm-debug.log
 /tmp/
