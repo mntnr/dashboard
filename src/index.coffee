@@ -3,6 +3,7 @@ Octokat = require 'octokat'
 request = require 'request-promise'
 {log} = require 'lightsaber'
 {merge, round, sample, size, sortBy} = require 'lodash'
+Wave = require 'loading-wave'
 $ = require 'jquery'
 require('datatables.net')()
 require('datatables.net-fixedheader')()
@@ -45,18 +46,37 @@ README_ITEMS = merge README_BADGES, README_OTHER
 github = new Octokat
 
 main = ->
-  loadMatrix()
+  @wave = loadingWave()
+  loadRepos()
+  .then (@repos) => killLoadingWave @wave
+  .then => showMatrix @repos
   .then => loadStats()
 
-loadMatrix = ->
+loadingWave = ->
+  wave = Wave
+    width: 162
+    height: 62
+    n: 7
+    color: '#959'
+  $(wave.el).center()
+  document.body.appendChild wave.el
+  wave.start()
+  wave
+
+killLoadingWave = (wave) ->
+  wave.stop()
+  $(wave.el).hide()
+
+loadRepos = ->
   github.orgs('ipfs').repos.fetch(per_page: 100)
   .then (repos) -> getReadmes repos
-  .then (repos) ->
-    $('#matrix').append matrix repos
-    $('table').DataTable
-      paging: false
-      searching: false
-      fixedHeader: true
+
+showMatrix = (repos) ->
+  $('#matrix').append matrix repos
+  $('table').DataTable
+    paging: false
+    searching: false
+    fixedHeader: true
 
 getReadmes = (repos) ->
   repos = sortBy repos, 'name'
@@ -121,5 +141,11 @@ stats = renderable (info) ->
     now = (new Date).getTime() / 1000  # seconds
     minutesUntilReset = (reset - now) / 60     # minutes
     "Github API calls: #{remaining} remaining of #{limit} limit per hour; clean slate in: #{round minutesUntilReset, 1} minutes"
+
+$.fn.center = ->
+  @css 'position', 'absolute'
+  @css 'top', Math.max(0, ($(window).height() - $(this).outerHeight()) / 2 + $(window).scrollTop()) + 'px'
+  @css 'left', Math.max(0, ($(window).width() - $(this).outerWidth()) / 2 + $(window).scrollLeft()) + 'px'
+  @
 
 main()
