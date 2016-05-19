@@ -7,9 +7,9 @@
 This is a status board for the github repositories within the IPFS organization.
 It displays build health, and other measures that we care about internally.
 
-For now, check out the latest here: <http://ipfs.github.io/project-repos/>.
+Check out the latest here: <http://project-repos.ipfs.io/>.
 
-Later this will be hosted via IPNS.
+Later this will be hosted via IPNS.  For now we use Github Pages.
 
 ## Contribute
 
