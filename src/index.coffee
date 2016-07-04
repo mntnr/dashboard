@@ -32,8 +32,8 @@ RAW_GITHUB_SOURCES = [
 ]
 
 README_BADGES =
-  'Travis': (repoName) -> "[![Travis CI](https://travis-ci.org//#{ORG}//#{repoName}.svg?branch=master)](https://travis-ci.org/#{ORG}/#{repoName})"
-  'Circle': (repoName) -> "[![Circle CI](https://circleci.com/gh/#{ORG}/#{repoName}.svg?style=svg)](https://circleci.com/gh/#{ORG}/#{repoName})"
+  'Travis': (repoName) -> "](https://travis-ci.org/#{ORG}/#{repoName}.svg?branch=master)](https://travis-ci.org/#{ORG}/#{repoName})"
+  'Circle': (repoName) -> "](https://circleci.com/gh/#{ORG}/#{repoName}.svg?style=svg)](https://circleci.com/gh/#{ORG}/#{repoName})"
   'Made By': -> '[![](https://img.shields.io/badge/made%20by-Protocol%20Labs-blue.svg?style=flat-square)](http://ipn.io)'
   'Project': -> '[![](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](http://ipfs.io/)'
   'IRC':     -> '[![](https://img.shields.io/badge/freenode-%23ipfs-blue.svg?style=flat-square)](http://webchat.freenode.net/?channels=%23ipfs)'
