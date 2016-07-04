@@ -48,6 +48,12 @@ github = new Octokat
 main = ->
   @wave = loadingWave()
   loadRepos()
+  .catch (err) ->
+    console.log('err', err)
+    killLoadingWave @wave
+    errMsg = 'Unable to access GitHub. <a href="https://twitter.com/githubstatus">Is it down?</a>'
+    $(document.body).append(errMsg)
+    throw new Error('Unable to access api.github.com')
   .then (@repos) => killLoadingWave @wave
   .then => showMatrix @repos
   .then => loadStats()
