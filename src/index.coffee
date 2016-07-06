@@ -38,10 +38,17 @@ README_BADGES =
   'Project': -> '[![](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](http://ipfs.io/)'
   'IRC':     -> '[![](https://img.shields.io/badge/freenode-%23ipfs-blue.svg?style=flat-square)](http://webchat.freenode.net/?channels=%23ipfs)'
 
+README_SECTIONS =
+  'ToC': -> 'Table of Contents'
+  'Install': -> '## Install'
+  'Usage': -> '## Usage'
+  'Contribute': -> '## Contribute'
+  'License': -> '## License'
+
 README_OTHER =
   'Banner': -> '![](https://cdn.rawgit.com/jbenet/contribute-ipfs-gif/master/img/contribute.gif)'
 
-README_ITEMS = merge README_BADGES, README_OTHER
+README_ITEMS = merge README_SECTIONS, README_OTHER
 
 github = new Octokat
 
@@ -101,7 +108,8 @@ matrix = renderable (repos) ->
         th ->
         th colspan: 2, -> "Builds"
         th colspan: 2, -> "README.md"
-        th colspan: size(README_ITEMS), -> "Badges"
+        th colspan: size(README_ITEMS), -> "Sections"
+        th colspan: size(README_BADGES), -> "Badges"
         th colspan: 2, -> "Github"
       tr ->
         th class: 'left', -> "IPFS Repo"
@@ -110,6 +118,8 @@ matrix = renderable (repos) ->
         th -> "exists"
         th -> "> 500 chars"
         for name of README_ITEMS
+          th -> name
+        for name of README_BADGES
           th -> name
         th -> 'Stars'
         th -> 'Open Issues'
@@ -123,6 +133,9 @@ matrix = renderable (repos) ->
           td class: 'no-padding', -> check repo.readmeText?
           td class: 'no-padding', -> check(repo.readmeText? and repo.readmeText.length > 500)
           for name, template of README_ITEMS
+            expectedMarkdown = template repo.name
+            td class: 'no-padding', -> check(repo.readmeText? and repo.readmeText.indexOf(expectedMarkdown) >= 0)
+          for name, template of README_BADGES
             expectedMarkdown = template repo.name
             td class: 'no-padding', -> check(repo.readmeText? and repo.readmeText.indexOf(expectedMarkdown) >= 0)
           td -> repo.stargazersCount.toString()
