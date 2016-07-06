@@ -89,7 +89,21 @@ getReadmes = (repos) ->
   Promise.map repos, (repo) ->
     uri = sample(RAW_GITHUB_SOURCES)(repo.name, 'README.md')
     request {uri}
-    .then (readmeText) -> repo.readmeText = readmeText
+    .then (readmeText) ->
+      repo.readmeText = readmeText
+      repo
+    .then (repo) ->
+      uri = sample(RAW_GITHUB_SOURCES)(repo.name, 'LICENSE')
+      request {uri}
+      .then (license) -> repo.license = (license)
+      .then (repo) ->
+        uri = sample(RAW_GITHUB_SOURCES)(repo.name, 'PATENTS')
+        request {uri}
+        .then (patents) -> repo.patents = (patents)
+        .then (repo) ->
+          uri = sample(RAW_GITHUB_SOURCES)(repo.name, 'CONTRIBUTE.md')
+          request {uri}
+          .then (contribute) -> repo.contribute = (contribute)
     .error (err) -> console.error [".error:", uri, err].join("\n")
     .catch (err) -> console.error [".catch:", uri, err].join("\n")
   .then -> repos
@@ -101,6 +115,7 @@ matrix = renderable (repos) ->
         th ->
         th colspan: 2, -> "Builds"
         th colspan: 2, -> "README.md"
+        th colspan: 2, -> "Files"
         th colspan: size(README_ITEMS), -> "Badges"
       tr ->
         th class: 'left', -> "IPFS Repo"
@@ -108,10 +123,14 @@ matrix = renderable (repos) ->
         th class: 'left', -> "Circle CI"
         th -> "exists"
         th -> "> 500 chars"
+        th -> "license"
+        th -> "patents"
+        th -> "contribute"
         for name of README_ITEMS
           th -> name
     tbody ->
       for repo in repos
+        console.log(repo)
         tr ->
           td class: 'left', ->
             a href: "https://github.com/#{ORG}/#{repo.name}", -> repo.name
@@ -119,6 +138,9 @@ matrix = renderable (repos) ->
           td class: 'left', -> circle repo.name
           td class: 'no-padding', -> check repo.readmeText?
           td class: 'no-padding', -> check(repo.readmeText? and repo.readmeText.length > 500)
+          td class: 'no-padding', -> check repo.license
+          td class: 'no-padding', -> check repo.patents
+          td class: 'no-padding', -> check repo.contribute
           for name, template of README_ITEMS
             expectedMarkdown = template repo.name
             td class: 'no-padding', -> check (repo.readmeText? and repo.readmeText?.indexOf(expectedMarkdown) isnt -1)
