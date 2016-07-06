@@ -102,6 +102,7 @@ matrix = renderable (repos) ->
         th colspan: 2, -> "Builds"
         th colspan: 2, -> "README.md"
         th colspan: size(README_ITEMS), -> "Badges"
+        th colspan: 2, -> "Github"
       tr ->
         th class: 'left', -> "IPFS Repo"
         th class: 'left', -> "Travis CI"
@@ -110,6 +111,8 @@ matrix = renderable (repos) ->
         th -> "> 500 chars"
         for name of README_ITEMS
           th -> name
+        th -> 'Stars'
+        th -> 'Open Issues'
     tbody ->
       for repo in repos
         tr ->
@@ -121,7 +124,9 @@ matrix = renderable (repos) ->
           td class: 'no-padding', -> check(repo.readmeText? and repo.readmeText.length > 500)
           for name, template of README_ITEMS
             expectedMarkdown = template repo.name
-            td class: 'no-padding', -> check (repo.readmeText? and repo.readmeText?.indexOf(expectedMarkdown) isnt -1)
+            td class: 'no-padding', -> check(repo.readmeText? and repo.readmeText.indexOf(expectedMarkdown) >= 0)
+          td -> repo.stargazersCount.toString()
+          td -> repo.openIssuesCount.toString()
 
 check = renderable (success) ->
   if success
