@@ -6,12 +6,13 @@
   "license": "MIT",
   "scripts": {
     "copy-css": "cp node_modules/datatables.net-dt/css/jquery.dataTables.css public/styles/ && cp node_modules/datatables.net-fixedheader-dt/css/fixedHeader.dataTables.css public/styles/",
-    "build": "npm-run-all copy-css build:browserify",
+    "build": "npm-run-all --silent copy-css build:browserify",
     "build:browserify": "browserify src/index.coffee --transform coffeeify --extension='.coffee' -g uglifyify | uglifyjs --mangle --compress > public/bundle.js",
-    "dev": "npm-run-all copy-css --parallel dev:watch dev:server",
+    "dev": "npm-run-all --silent copy-css --parallel dev:watch dev:server",
     "dev:server": "src/server/dev.coffee",
     "dev:watch": "nodemon --watch src --watch public/index.html  --watch public/styles --exec 'browserify' src/index.coffee --transform coffeeify --extension='.coffee' --outfile public/bundle.js",
-    "publish": "npm run build && bin/publish"
+    "publish": "npm-run-all --silent build ipfs",
+    "ipfs": "open https://ipfs.io/ipfs/`ipfs add -q -r public | tail -n 1`"
   },
   "dependencies": {},
   "devDependencies": {
@@ -24,7 +25,6 @@
     "datatables.net-dt": "^1.10.10",
     "datatables.net-fixedheader": "^3.1.0",
     "datatables.net-fixedheader-dt": "^3.1.0",
-    "gh-pages": "^0.8.0",
     "jquery": "^2.1.4",
     "lightsaber": "^0.5.1",
     "loading-wave": "0.0.2",
