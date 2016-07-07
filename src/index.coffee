@@ -108,10 +108,11 @@ matrix = renderable (repos) ->
     thead ->
       tr ->
         th ->
-        th colspan: 2, -> "Builds"
-        th colspan: 2, -> "README.md"
-        th colspan: 3, -> "Files"
-        th colspan: size(README_ITEMS), -> "Badges"
+        th class: 'left', colspan: 2, -> "Builds"
+        th class: 'left', colspan: 2, -> "README.md"
+        th class: 'left', colspan: 3, -> "Files"
+        th class: 'left', colspan: size(README_ITEMS), -> "Badges"
+        th class: 'left', colspan: 2, -> "Github"
       tr ->
         th class: 'left', -> "IPFS Repo"  # Name
         th class: 'left', -> "Travis CI"  # Builds
@@ -123,6 +124,8 @@ matrix = renderable (repos) ->
         th -> "contribute"                # Files
         for name of README_ITEMS          # Badges
           th -> name
+        th -> 'Stars'                     # Github
+        th -> 'Open Issues'               # Github
     tbody ->
       for repo in repos
         tr ->
@@ -137,6 +140,8 @@ matrix = renderable (repos) ->
           for name, template of README_ITEMS                                                      # Badges
             expectedMarkdown = template repo.name
             td class: 'no-padding', -> check (repo.files[README]?.indexOf(expectedMarkdown) >= 0)
+          td -> repo.stargazersCount.toString()
+          td -> repo.openIssuesCount.toString()
 
 check = renderable (success) ->
   if success
