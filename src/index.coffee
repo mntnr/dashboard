@@ -38,8 +38,17 @@ README_BADGES =
   'Project': -> '[![](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](http://ipfs.io/)'
   'IRC':     -> '[![](https://img.shields.io/badge/freenode-%23ipfs-blue.svg?style=flat-square)](http://webchat.freenode.net/?channels=%23ipfs)'
 
+README_SECTIONS =
+  'ToC': -> 'Table of Contents'
+  'Install': -> '## Install'
+  'Usage': -> '## Usage'
+  'Contribute': -> '## Contribute'
+  'License': -> '## License'
+
 README_OTHER =
   'Banner': -> '![](https://cdn.rawgit.com/jbenet/contribute-ipfs-gif/master/img/contribute.gif)'
+
+README_ITEMS = merge README_SECTIONS, README_OTHER
 
 FILES = [
   README = 'README.md'
@@ -47,8 +56,6 @@ FILES = [
   PATENTS = 'PATENTS'
   CONTRIBUTE = 'CONTRIBUTE.md'
 ]
-
-README_ITEMS = merge README_BADGES, README_OTHER
 
 github = new Octokat
 
@@ -111,7 +118,8 @@ matrix = renderable (repos) ->
         th class: 'left', colspan: 2, -> "Builds"
         th class: 'left', colspan: 2, -> "README.md"
         th class: 'left', colspan: 3, -> "Files"
-        th class: 'left', colspan: size(README_ITEMS), -> "Badges"
+        th class: 'left', colspan: size(README_ITEMS), -> "Sections"
+        th class: 'left', colspan: size(README_BADGES), -> "Badges"
         th class: 'left', colspan: 2, -> "Github"
       tr ->
         th class: 'left', -> "IPFS Repo"  # Name
@@ -122,7 +130,9 @@ matrix = renderable (repos) ->
         th -> "license"                   # Files
         th -> "patents"                   # Files
         th -> "contribute"                # Files
-        for name of README_ITEMS          # Badges
+        for name of README_ITEMS          # Sections
+          th -> name
+        for name of README_BADGES         # Badges
           th -> name
         th -> 'Stars'                     # Github
         th -> 'Open Issues'               # Github
@@ -139,7 +149,10 @@ matrix = renderable (repos) ->
           td class: 'no-padding', -> check repo.files[CONTRIBUTE]                                 # Files
           for name, template of README_ITEMS                                                      # Badges
             expectedMarkdown = template repo.name
-            td class: 'no-padding', -> check (repo.files[README]?.indexOf(expectedMarkdown) >= 0)
+            td class: 'no-padding', -> check(repo.files[README]?.indexOf(expectedMarkdown) >= 0)
+          for name, template of README_BADGES
+            expectedMarkdown = template repo.name
+            td class: 'no-padding', -> check(repo.files[README]?.indexOf(expectedMarkdown) >= 0)
           td -> repo.stargazersCount.toString()
           td -> repo.openIssuesCount.toString()
 
