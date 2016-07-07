@@ -41,6 +41,13 @@ README_BADGES =
 README_OTHER =
   'Banner': -> '![](https://cdn.rawgit.com/jbenet/contribute-ipfs-gif/master/img/contribute.gif)'
 
+FILES = [
+  README = 'README.md'
+  LICENSE = 'LICENSE'
+  PATENTS = 'PATENTS'
+  CONTRIBUTE = 'CONTRIBUTE.md'
+]
+
 README_ITEMS = merge README_BADGES, README_OTHER
 
 github = new Octokat
@@ -75,7 +82,7 @@ killLoadingWave = (wave) ->
 
 loadRepos = ->
   github.orgs('ipfs').repos.fetch(per_page: 100)
-  .then (repos) -> getReadmes repos
+  .then (repos) -> getFiles repos
 
 showMatrix = (repos) ->
   $('#matrix').append matrix repos
@@ -84,14 +91,16 @@ showMatrix = (repos) ->
     searching: false
     fixedHeader: true
 
-getReadmes = (repos) ->
+getFiles = (repos) ->
   repos = sortBy repos, 'name'
   Promise.map repos, (repo) ->
-    uri = sample(RAW_GITHUB_SOURCES)(repo.name, 'README.md')
-    request {uri}
-    .then (readmeText) -> repo.readmeText = readmeText
-    .error (err) -> console.error [".error:", uri, err].join("\n")
-    .catch (err) -> console.error [".catch:", uri, err].join("\n")
+    repo.files = {}
+    Promise.map FILES, (fileName) ->
+      source = sample RAW_GITHUB_SOURCES
+      request uri: source repo.name, fileName
+      .then (fileContents) ->
+        repo.files[fileName] = fileContents
+      .catch (err) -> # console.error err
   .then -> repos
 
 matrix = renderable (repos) ->
@@ -99,32 +108,38 @@ matrix = renderable (repos) ->
     thead ->
       tr ->
         th ->
-        th colspan: 2, -> "Builds"
-        th colspan: 2, -> "README.md"
-        th colspan: size(README_ITEMS), -> "Badges"
-        th colspan: 2, -> "Github"
+        th class: 'left', colspan: 2, -> "Builds"
+        th class: 'left', colspan: 2, -> "README.md"
+        th class: 'left', colspan: 3, -> "Files"
+        th class: 'left', colspan: size(README_ITEMS), -> "Badges"
+        th class: 'left', colspan: 2, -> "Github"
       tr ->
-        th class: 'left', -> "IPFS Repo"
-        th class: 'left', -> "Travis CI"
-        th class: 'left', -> "Circle CI"
-        th -> "exists"
-        th -> "> 500 chars"
-        for name of README_ITEMS
+        th class: 'left', -> "IPFS Repo"  # Name
+        th class: 'left', -> "Travis CI"  # Builds
+        th class: 'left', -> "Circle CI"  # Builds
+        th -> "exists"                    # README.md
+        th -> "> 500 chars"               # README.md
+        th -> "license"                   # Files
+        th -> "patents"                   # Files
+        th -> "contribute"                # Files
+        for name of README_ITEMS          # Badges
           th -> name
-        th -> 'Stars'
-        th -> 'Open Issues'
+        th -> 'Stars'                     # Github
+        th -> 'Open Issues'               # Github
     tbody ->
       for repo in repos
         tr ->
-          td class: 'left', ->
-            a href: "https://github.com/#{ORG}/#{repo.name}", -> repo.name
-          td class: 'left', -> travis repo.name
-          td class: 'left', -> circle repo.name
-          td class: 'no-padding', -> check repo.readmeText?
-          td class: 'no-padding', -> check(repo.readmeText? and repo.readmeText.length > 500)
-          for name, template of README_ITEMS
+          td class: 'left', -> a href: "https://github.com/#{ORG}/#{repo.name}", -> repo.name     # Name
+          td class: 'left', -> travis repo.name                                                   # Builds
+          td class: 'left', -> circle repo.name                                                   # Builds
+          td class: 'no-padding', -> check repo.files[README]                                     # README.md
+          td class: 'no-padding', -> check(repo.files[README]?.length > 500)                      # README.md
+          td class: 'no-padding', -> check repo.files[LICENSE]                                    # Files
+          td class: 'no-padding', -> check repo.files[PATENTS]                                    # Files
+          td class: 'no-padding', -> check repo.files[CONTRIBUTE]                                 # Files
+          for name, template of README_ITEMS                                                      # Badges
             expectedMarkdown = template repo.name
-            td class: 'no-padding', -> check(repo.readmeText? and repo.readmeText.indexOf(expectedMarkdown) >= 0)
+            td class: 'no-padding', -> check (repo.files[README]?.indexOf(expectedMarkdown) >= 0)
           td -> repo.stargazersCount.toString()
           td -> repo.openIssuesCount.toString()
 
