@@ -168,7 +168,7 @@ travis = renderable (repoName) ->
 
 circle = renderable (repoName) ->
   a href: "https://circleci.com/gh/#{ORG}/#{repoName}", ->
-    img src: "https://circleci.com/gh/#{ORG}/#{repoName}.svg?style=svg", onError: "this.src = 'images/circle-ci-no-builds.svg'"
+    img src: "https://circleci.com/gh/#{ORG}/#{repoName}.svg?style=svg", onError: "this.parentElement.href = 'https://circleci.com/add-projects'; this.src = 'images/circle-ci-no-builds.svg'"
 
 loadStats = ->
   github.rateLimit.fetch()
