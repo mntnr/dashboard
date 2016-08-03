@@ -89,7 +89,21 @@ killLoadingWave = (wave) ->
 
 loadRepos = ->
   github.orgs('ipfs').repos.fetch(per_page: 100)
-  .then (repos) -> getFiles repos
+  .then (firstPage) ->
+    thisAndFollowingPages(firstPage)
+  .then (repos) ->
+    getFiles repos
+
+thisAndFollowingPages = (thisPage) ->
+  unless thisPage.nextPage?
+    return Promise.resolve thisPage
+  thisPage.nextPage()
+  .then (nextPage) ->
+    thisAndFollowingPages nextPage
+  .then (followingPages) ->
+    repos = thisPage
+    repos.push followingPages...
+    repos
 
 showMatrix = (repos) ->
   $('#matrix').append matrix repos
