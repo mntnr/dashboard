@@ -12,7 +12,7 @@ It displays build health, and other measures that we care about internally.
 
 Check out the latest here: <http://project-repos.ipfs.io/>.
 
-Later this will be hosted via IPNS.  For now we use Github Pages.
+Hosted on IPFS!
 
 ## Table of Contents
 
@@ -39,7 +39,6 @@ To build minified javascript for production:
     npm run build
 
 ## Contribute
-
 
 If you would like to contribute code to this repository, please dive in! Check out [the issues](//github.com/ipfs/project-repos/issues). Clicking the banner above will lead you to the general [IPFS community contribute guidelines](https://github.com/ipfs/community/blob/master/contributing.md), if you would like to contribute in other ways.
 

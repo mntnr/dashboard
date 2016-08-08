@@ -101,6 +101,7 @@ class RepoMatrix
     .then (repos) =>
       @getFiles repos
 
+  # recursively fetch all "pages" (groups of up to 100 repos) from Github API
   @thisAndFollowingPages = (thisPage) ->
     unless thisPage.nextPage?
       return Promise.resolve thisPage
@@ -111,7 +112,6 @@ class RepoMatrix
       repos = thisPage
       repos.push followingPages...
       repos
-
 
   @showMatrix: (repos) ->
     $('#matrix').append @matrix repos
