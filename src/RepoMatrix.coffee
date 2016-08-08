@@ -150,7 +150,7 @@ class RepoMatrix
           th class: 'left', colspan: size(README_BADGES), => "Badges"
           th class: 'left', colspan: 2, => "Github"
         tr =>
-          th class: 'left', => "IPFS Repo"  # Name
+          th class: 'left', => "Repo"       # Name
           th class: 'left', => "Travis CI"  # Builds
           th class: 'left', => "Circle CI"  # Builds
           th => "exists"                    # README.md
