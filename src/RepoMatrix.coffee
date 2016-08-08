@@ -2,7 +2,7 @@ Promise = require 'bluebird'
 Octokat = require 'octokat'
 request = require 'request-promise'
 {log} = require 'lightsaber'
-{merge, round, sample, size, sortBy} = require 'lodash'
+{flatten, merge, round, sample, size, sortBy} = require 'lodash'
 Wave = require 'loading-wave'
 $ = require 'jquery'
 require('datatables.net')()
@@ -30,17 +30,22 @@ $.fn.center = ->
   @
 
 class RepoMatrix
-  ORG = 'ipfs'
+  ORGS = [
+    'ipfs'
+    'ipld'
+    'libp2p'
+    'multiformats'
+  ]
 
   RAW_GITHUB_SOURCES = [
-    (repoName, path) -> "https://raw.githubusercontent.com/#{ORG}/#{repoName}/master/#{path}"
-    # (repoName, path) -> "https://rawgit.com/#{ORG}/#{repoName}/master/#{path}"
-    # (repoName, path) -> "https://raw.githack.com/#{ORG}/#{repoName}/master/#{path}"  # funky error messages on 404
+    (repoFullName, path) -> "https://raw.githubusercontent.com/#{repoFullName}/master/#{path}"
+    # (repoFullName, path) -> "https://rawgit.com/#{repoFullName}/master/#{path}"
+    # (repoFullName, path) -> "https://raw.githack.com/#{repoFullName}/master/#{path}"  # funky error messages on 404
   ]
 
   README_BADGES =
-    'Travis': (repoName) -> "(https://travis-ci.org/#{ORG}/#{repoName})"
-    'Circle': (repoName) -> "(https://circleci.com/gh/#{ORG}/#{repoName})"
+    'Travis': (repoFullName) -> "(https://travis-ci.org/#{repoFullName})"
+    'Circle': (repoFullName) -> "(https://circleci.com/gh/#{repoFullName})"
     'Made By': -> '[![](https://img.shields.io/badge/made%20by-Protocol%20Labs-blue.svg?style=flat-square)](http://ipn.io)'
     'Project': -> '[![](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](http://ipfs.io/)'
     'IRC':     -> '[![](https://img.shields.io/badge/freenode-%23ipfs-blue.svg?style=flat-square)](http://webchat.freenode.net/?channels=%23ipfs)'
@@ -70,11 +75,11 @@ class RepoMatrix
     @wave = @loadingWave()
     @loadRepos()
     .catch (err) =>
-      console.error {err}
       @killLoadingWave @wave
       errMsg = 'Unable to access GitHub. <a href="https://twitter.com/githubstatus">Is it down?</a>'
       $(document.body).append(errMsg)
       throw err
+    .then (repos) => @getFiles repos
     .then (@repos) => @killLoadingWave @wave
     .then => @showMatrix @repos
     .then => @loadStats()
@@ -95,11 +100,12 @@ class RepoMatrix
     $(wave.el).hide()
 
   @loadRepos: ->
-    github.orgs('ipfs').repos.fetch(per_page: 100)
-    .then (firstPage) =>
-      @thisAndFollowingPages(firstPage)
-    .then (repos) =>
-      @getFiles repos
+    Promise.map ORGS, (org) =>
+      github.orgs(org).repos.fetch(per_page: 100)
+      .then (firstPage) =>
+        reposThisOrg = @thisAndFollowingPages(firstPage)
+    .then (reposAllOrgs) =>
+      allRepos = flatten reposAllOrgs
 
   # recursively fetch all "pages" (groups of up to 100 repos) from Github API
   @thisAndFollowingPages = (thisPage) ->
@@ -121,12 +127,12 @@ class RepoMatrix
       fixedHeader: true
 
   @getFiles: (repos) ->
-    repos = sortBy repos, 'name'
+    repos = sortBy repos, 'fullName'
     Promise.map repos, (repo) ->
       repo.files = {}
       Promise.map FILES, (fileName) ->
         source = sample RAW_GITHUB_SOURCES
-        request uri: source repo.name, fileName
+        request uri: source repo.fullName, fileName
         .then (fileContents) ->
           repo.files[fileName] = fileContents
         .catch (err) -> # console.error err
@@ -144,7 +150,7 @@ class RepoMatrix
           th class: 'left', colspan: size(README_BADGES), => "Badges"
           th class: 'left', colspan: 2, => "Github"
         tr =>
-          th class: 'left', => "IPFS Repo"  # Name
+          th class: 'left', => "Repo"       # Name
           th class: 'left', => "Travis CI"  # Builds
           th class: 'left', => "Circle CI"  # Builds
           th => "exists"                    # README.md
@@ -161,19 +167,19 @@ class RepoMatrix
       tbody =>
         for repo in repos
           tr =>
-            td class: 'left', => a href: "https://github.com/#{ORG}/#{repo.name}", => repo.name     # Name
-            td class: 'left', => @travis repo.name                                                   # Builds
-            td class: 'left', => @circle repo.name                                                   # Builds
+            td class: 'left', => a href: "https://github.com/#{repo.fullName}", => repo.fullName     # Name
+            td class: 'left', => @travis repo.fullName                                               # Builds
+            td class: 'left', => @circle repo.fullName                                               # Builds
             td class: 'no-padding', => @check repo.files[README]                                     # README.md
             td class: 'no-padding', => @check(repo.files[README]?.length > 500)                      # README.md
             td class: 'no-padding', => @check repo.files[LICENSE]                                    # Files
             td class: 'no-padding', => @check repo.files[PATENTS]                                    # Files
             td class: 'no-padding', => @check repo.files[CONTRIBUTE]                                 # Files
-            for name, template of README_ITEMS                                                      # Badges
-              expectedMarkdown = template repo.name
+            for name, template of README_ITEMS                                                       # Badges
+              expectedMarkdown = template repo.fullName
               td class: 'no-padding', => @check(repo.files[README]?.indexOf(expectedMarkdown) >= 0)
             for name, template of README_BADGES
-              expectedMarkdown = template repo.name
+              expectedMarkdown = template repo.fullName
               td class: 'no-padding', => @check(repo.files[README]?.indexOf(expectedMarkdown) >= 0)
             td => repo.stargazersCount.toString()
             td => repo.openIssuesCount.toString()
@@ -184,13 +190,13 @@ class RepoMatrix
     else
       div class: 'failure', -> '✗'
 
-  @travis: renderable (repoName) ->
-    a href: "https://travis-ci.org/#{ORG}/#{repoName}", ->
-      img src: "https://travis-ci.org/#{ORG}/#{repoName}.svg?branch=master"
+  @travis: renderable (repoFullName) ->
+    a href: "https://travis-ci.org/#{repoFullName}", ->
+      img src: "https://travis-ci.org/#{repoFullName}.svg?branch=master"
 
-  @circle: renderable (repoName) ->
-    a href: "https://circleci.com/gh/#{ORG}/#{repoName}", ->
-      img src: "https://circleci.com/gh/#{ORG}/#{repoName}.svg?style=svg", onError: "this.parentElement.href = 'https://circleci.com/add-projects'; this.src = 'images/circle-ci-no-builds.svg'"
+  @circle: renderable (repoFullName) ->
+    a href: "https://circleci.com/gh/#{repoFullName}", ->
+      img src: "https://circleci.com/gh/#{repoFullName}.svg?style=svg", onError: "this.parentElement.href = 'https://circleci.com/add-projects'; this.src = 'images/circle-ci-no-builds.svg'"
 
   @loadStats: ->
     github.rateLimit.fetch()
@@ -200,7 +206,7 @@ class RepoMatrix
     {resources: {core: {limit, remaining, reset}}} = info
     div class: 'stats', ->
       now = (new Date).getTime() / 1000  # seconds
-      minutesUntilReset = (reset - now) / 60     # minutes
+      minutesUntilReset = (reset - now) / 60  # minutes
       "Github API calls: #{remaining} remaining of #{limit} limit per hour; clean slate in: #{round minutesUntilReset, 1} minutes"
 
 module.exports = RepoMatrix
