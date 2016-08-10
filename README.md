@@ -19,6 +19,7 @@ Hosted on IPFS!
 - [Install](#install)
 - [Usage](#usage)
   - [Local development](#local-development)
+- [Deploy](#deploy)
 - [Contribute](#contribute)
 - [License](#license)
 
@@ -37,6 +38,17 @@ To recompile continuously, and start a development server with hot reloading:
 To build minified javascript for production:
 
     npm run build
+
+## Deploy
+
+To deploy this, after merging any new PRs, follow these steps:
+
+1. Have an ipfs daemon running: `ipfs daemon`.
+2. Kill your `npm run dev` script if you happen to have it running.
+3. `npm install && npm prune`
+4. `npm run publish`. This should open the published page on the gateway.
+5. Pin the hash: `ipfs pin add <hash>`
+6. Post to https://github.com/ipfs/ops-requests/issues
 
 ## Contribute
 
