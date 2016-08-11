@@ -43,12 +43,13 @@ To build minified javascript for production:
 
 To deploy this, after merging any new PRs, follow these steps:
 
-1. Have an ipfs daemon running: `ipfs daemon`.
+1. Have an ipfs daemon running: `ipfs daemon`
 2. Kill your `npm run dev` script if you happen to have it running.
 3. `npm install && npm prune`
 4. `npm run publish`. This should open the published page on the gateway.
 5. Pin the hash: `ipfs pin add <hash>`
-6. Post to https://github.com/ipfs/ops-requests/issues
+6. Pin the hash to the gateways, on IRC: `!pin <hash> project-repos.ipfs.io`
+7. Post the hash and url to https://github.com/ipfs/ops-requests/issues.
 
 ## Contribute
 
