@@ -129,7 +129,6 @@ class RepoMatrix
         allRepos.concat individualRepos
     .then (reposAllOrgs) =>
       allRepos = flatten reposAllOrgs
-      console.log('reposAllOrgs', allRepos)
       allRepos
 
   # recursively fetch all "pages" (groups of up to 100 repos) from Github API
