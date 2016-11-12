@@ -37,6 +37,24 @@ class RepoMatrix
     'multiformats'
   ]
 
+  INDIVIDUAL_REPOS = [
+    'haadcode/orbit',
+    'haadcode/orbit-core',
+    'haadcode/orbit-textui',
+    'haadcode/orbit-crypto',
+    'haadcode/orbit-db',
+    'haadcode/orbit-db-store',
+    'haadcode/orbit-db-kvstore',
+    'haadcode/orbit-db-eventstore',
+    'haadcode/orbit-db-feedstore',
+    'haadcode/orbit-db-counterstore',
+    'haadcode/orbit-db-pubsub',
+    'haadcode/crdts',
+    'haadcode/ipfs-post',
+    'haadcode/go-ipfs-log',
+    'haadcode/ipfs-log'
+  ]
+
   RAW_GITHUB_SOURCES = [
     (repoFullName, path) -> "https://raw.githubusercontent.com/#{repoFullName}/master/#{path}"
     # (repoFullName, path) -> "https://rawgit.com/#{repoFullName}/master/#{path}"
@@ -104,8 +122,15 @@ class RepoMatrix
       github.orgs(org).repos.fetch(per_page: 100)
       .then (firstPage) =>
         reposThisOrg = @thisAndFollowingPages(firstPage)
+    .then (allRepos) =>
+      Promise.map INDIVIDUAL_REPOS, (repoName) =>
+        github.repos.apply(null, repoName.split('/')).fetch()
+      .then (individualRepos) =>
+        allRepos.concat individualRepos
     .then (reposAllOrgs) =>
       allRepos = flatten reposAllOrgs
+      console.log('reposAllOrgs', allRepos)
+      allRepos
 
   # recursively fetch all "pages" (groups of up to 100 repos) from Github API
   @thisAndFollowingPages = (thisPage) ->
