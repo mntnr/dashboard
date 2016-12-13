@@ -66,7 +66,6 @@ class RepoMatrix
     README = 'README.md'
     LICENSE = 'LICENSE'
     PATENTS = 'PATENTS'
-    CONTRIBUTE = 'CONTRIBUTE.md'
   ]
 
   github = new Octokat
@@ -157,7 +156,6 @@ class RepoMatrix
           th => "> 500 chars"               # README.md
           th => "license"                   # Files
           th => "patents"                   # Files
-          th => "contribute"                # Files
           for name of README_ITEMS          # Sections
             th => name
           for name of README_BADGES         # Badges
@@ -174,7 +172,6 @@ class RepoMatrix
             td class: 'no-padding', => @check(repo.files[README]?.length > 500)                      # README.md
             td class: 'no-padding', => @check repo.files[LICENSE]                                    # Files
             td class: 'no-padding', => @check repo.files[PATENTS]                                    # Files
-            td class: 'no-padding', => @check repo.files[CONTRIBUTE]                                 # Files
             for name, template of README_ITEMS                                                       # Badges
               expectedMarkdown = template repo.fullName
               td class: 'no-padding', => @check(repo.files[README]?.indexOf(expectedMarkdown) >= 0)
