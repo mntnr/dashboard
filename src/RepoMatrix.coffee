@@ -76,6 +76,7 @@ class RepoMatrix
     'License': -> '## License'
 
   README_OTHER =
+    'TODO': -> 'TODO'
     'Banner': -> '![](https://cdn.rawgit.com/jbenet/contribute-ipfs-gif/master/img/contribute.gif)'
 
   README_ITEMS = merge README_SECTIONS, README_OTHER
@@ -211,8 +212,9 @@ class RepoMatrix
                   td class: 'no-padding', => @check('na')
                 else
                   td class: 'no-padding', => @check(repo.files[README]?.indexOf(expectedMarkdown) >= 0)
+              else if name == 'TODO'
+                td class: 'no-padding', => @check(repo.files[README]?.indexOf(expectedMarkdown) == -1)
               else
-                console.log name, template
                 td class: 'no-padding', => @check(repo.files[README]?.indexOf(expectedMarkdown) >= 0)
             for name, template of README_BADGES
               expectedMarkdown = template repo.fullName
