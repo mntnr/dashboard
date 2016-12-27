@@ -4,6 +4,12 @@
   line-height: 2em;
 }
 
+.na {
+  background-color: white;
+  color: grey;
+  line-height: 2em;
+}
+
 .failure {
   line-height: 2em;
   background-color: darkred;
