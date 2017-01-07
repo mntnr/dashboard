@@ -126,7 +126,10 @@ class RepoMatrix
       Promise.map INDIVIDUAL_REPOS, (repoName) =>
         github.repos.apply(null, repoName.split('/')).fetch()
       .then (individualRepos) =>
-        allRepos.concat individualRepos
+        Promise.resolve github.search.issues.fetch({q: 'type:pr is:open repo:' + individualRepos[0].fullName})
+          .then (openPRs) =>
+            individualRepos[0].openPRsCount = openPRs.totalCount
+            allRepos.concat individualRepos
     .then (reposAllOrgs) =>
       allRepos = flatten reposAllOrgs
       allRepos
@@ -172,7 +175,7 @@ class RepoMatrix
           th class: 'left', colspan: 3, => "Files"
           th class: 'left', colspan: size(README_ITEMS), => "Sections"
           th class: 'left', colspan: size(README_BADGES), => "Badges"
-          th class: 'left', colspan: 2, => "Github"
+          th class: 'left', colspan: 3, => "Github"
         tr =>
           th class: 'left', => "Repo"       # Name
           th class: 'left', => "Travis CI"  # Builds
@@ -187,6 +190,7 @@ class RepoMatrix
             th => name
           th => 'Stars'                     # Github
           th => 'Open Issues'               # Github
+          th => 'Open PRs'                  # Github
       tbody =>
         for repo in repos
           tr =>
@@ -217,7 +221,8 @@ class RepoMatrix
               expectedMarkdown = template repo.fullName
               td class: 'no-padding', => @check(repo.files[README]?.indexOf(expectedMarkdown) >= 0)
             td => repo.stargazersCount.toString()
-            td => repo.openIssuesCount.toString()
+            td => (repo.openIssuesCount-repo.openPRsCount).toString()
+            td => repo.openPRsCount.toString()
 
   @check: renderable (success) ->
     if success == 'na'
