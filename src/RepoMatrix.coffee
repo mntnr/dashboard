@@ -117,19 +117,27 @@ class RepoMatrix
     wave.stop()
     $(wave.el).hide()
 
+  @getPRCounts: (repo) ->
+    Promise.resolve github.search.issues.fetch({q: 'type:pr is:open repo:' + repo.fullName})
+      .then (openPRs) =>
+        repo.openPRsCount = openPRs.totalCount
+        repo
+
   @loadRepos: ->
     Promise.map ORGS, (org) =>
       github.orgs(org).repos.fetch(per_page: 100)
       .then (firstPage) =>
         reposThisOrg = @thisAndFollowingPages(firstPage)
+      .then (repos) =>
+        Promise.map repos, (repo) =>
+          @getPRCounts(repo)
     .then (allRepos) =>
       Promise.map INDIVIDUAL_REPOS, (repoName) =>
         github.repos.apply(null, repoName.split('/')).fetch()
+        .then (repo) =>
+          @getPRCounts(repo)
       .then (individualRepos) =>
-        Promise.resolve github.search.issues.fetch({q: 'type:pr is:open repo:' + individualRepos[0].fullName})
-          .then (openPRs) =>
-            individualRepos[0].openPRsCount = openPRs.totalCount
-            allRepos.concat individualRepos
+        allRepos.concat individualRepos
     .then (reposAllOrgs) =>
       allRepos = flatten reposAllOrgs
       allRepos
