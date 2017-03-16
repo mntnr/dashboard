@@ -30,30 +30,9 @@ $.fn.center = ->
   @
 
 class RepoMatrix
-  ORGS = [
-    'ipfs'
-    'ipld'
-    'libp2p'
-    'multiformats'
-  ]
-
-  INDIVIDUAL_REPOS = [
-    'haadcode/orbit',
-    'haadcode/orbit-core',
-    'haadcode/orbit-textui',
-    'haadcode/orbit-crypto',
-    'haadcode/orbit-db',
-    'haadcode/orbit-db-store',
-    'haadcode/orbit-db-kvstore',
-    'haadcode/orbit-db-eventstore',
-    'haadcode/orbit-db-feedstore',
-    'haadcode/orbit-db-counterstore',
-    'haadcode/orbit-db-pubsub',
-    'haadcode/crdts',
-    'haadcode/ipfs-post',
-    'haadcode/go-ipfs-log',
-    'haadcode/ipfs-log'
-  ]
+  config = require('../labs-config.json')
+  ORGS = config.orgs
+  INDIVIDUAL_REPOS = config.individualRepos
 
   RAW_GITHUB_SOURCES = [
     (repoFullName, path) -> "https://raw.githubusercontent.com/#{repoFullName}/master/#{path}"
