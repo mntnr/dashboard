@@ -220,8 +220,8 @@ class RepoMatrix
             for name, template of README_BADGES
               expectedMarkdown = template repo.fullName
               td class: 'no-padding', => @check(repo.files[README]?.indexOf(expectedMarkdown) >= 0)
-            td => repo.stargazersCount.toString()
-            td => repo.openIssuesCount.toString()
+            td => if repo.stargazersCount then repo.stargazersCount.toString() else '?'
+            td => if repo.openIssuesCount then repo.openIssuesCount.toString() else '?'
             #td => (repo.openIssuesCount-repo.openPRsCount).toString()
             #td => repo.openPRsCount.toString()
 
