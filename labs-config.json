@@ -3,6 +3,7 @@
     "orbitdb"
   ],
   "individualRepos": [
-    "ipfs/go-ipfs"
+    "ipfs/go-ipfs",
+    "ipfs/ipfs"
   ]
 }

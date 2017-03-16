@@ -19,6 +19,7 @@ require('datatables.net-fixedheader')()
   table
   tbody
   td
+  text
   th
   thead
   tr
@@ -220,8 +221,8 @@ class RepoMatrix
             for name, template of README_BADGES
               expectedMarkdown = template repo.fullName
               td class: 'no-padding', => @check(repo.files[README]?.indexOf(expectedMarkdown) >= 0)
-            td => if repo.stargazersCount then repo.stargazersCount.toString() else '?'
-            td => if repo.openIssuesCount then repo.openIssuesCount.toString() else '?'
+            td => if repo.stargazersCount then text repo.stargazersCount else '?'
+            td => if repo.openIssuesCount then text repo.openIssuesCount else '?'
             #td => (repo.openIssuesCount-repo.openPRsCount).toString()
             #td => repo.openPRsCount.toString()
 
