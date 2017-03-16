@@ -30,30 +30,9 @@ $.fn.center = ->
   @
 
 class RepoMatrix
-  ORGS = [
-    'ipfs'
-    'ipld'
-    'libp2p'
-    'multiformats'
-  ]
-
-  INDIVIDUAL_REPOS = [
-    'haadcode/orbit',
-    'haadcode/orbit-core',
-    'haadcode/orbit-textui',
-    'haadcode/orbit-crypto',
-    'haadcode/orbit-db',
-    'haadcode/orbit-db-store',
-    'haadcode/orbit-db-kvstore',
-    'haadcode/orbit-db-eventstore',
-    'haadcode/orbit-db-feedstore',
-    'haadcode/orbit-db-counterstore',
-    'haadcode/orbit-db-pubsub',
-    'haadcode/crdts',
-    'haadcode/ipfs-post',
-    'haadcode/go-ipfs-log',
-    'haadcode/ipfs-log'
-  ]
+  config = require('../labs-config.json')
+  ORGS = config.orgs
+  INDIVIDUAL_REPOS = config.individualRepos
 
   RAW_GITHUB_SOURCES = [
     (repoFullName, path) -> "https://raw.githubusercontent.com/#{repoFullName}/master/#{path}"
@@ -118,11 +97,13 @@ class RepoMatrix
     $(wave.el).hide()
 
   @getPRCounts: (repo) ->
-    Promise.resolve github.search.issues.fetch({q: 'type:pr is:open repo:' + repo.fullName})
-      .then (openPRs) =>
-        repo.openPRsCount = openPRs.totalCount
-        repo
+    # Throttled at 30 per minute. TODO Implement a good throttler here.
+    # Promise.resolve github.search.issues.fetch({q: 'type:pr is:open repo:' + repo.fullName})
+    #   .then (openPRs) =>
+    repo.openPRsCount = 'TODO' # openPRs.totalCount
+    repo
 
+  # TODO Allow users as well as orgs
   @loadRepos: ->
     Promise.map ORGS, (org) =>
       github.orgs(org).repos.fetch(per_page: 100)
@@ -198,7 +179,7 @@ class RepoMatrix
             th => name
           th => 'Stars'                     # Github
           th => 'Open Issues'               # Github
-          th => 'Open PRs'                  # Github
+          #th => 'Open PRs'                  # Github
       tbody =>
         for repo in repos
           tr =>
@@ -229,8 +210,9 @@ class RepoMatrix
               expectedMarkdown = template repo.fullName
               td class: 'no-padding', => @check(repo.files[README]?.indexOf(expectedMarkdown) >= 0)
             td => repo.stargazersCount.toString()
-            td => (repo.openIssuesCount-repo.openPRsCount).toString()
-            td => repo.openPRsCount.toString()
+            td => repo.openIssuesCount.toString()
+            #td => (repo.openIssuesCount-repo.openPRsCount).toString()
+            #td => repo.openPRsCount.toString()
 
   @check: renderable (success) ->
     if success == 'na'
