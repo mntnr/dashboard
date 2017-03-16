@@ -14,7 +14,9 @@
     "publish": "npm-run-all --silent build ipfs",
     "ipfs": "open https://ipfs.io/ipfs/`ipfs add -q -r public | tail -n 1`"
   },
-  "dependencies": {},
+  "dependencies": {
+    "is-github-user-or-org": "^1.0.2"
+  },
   "devDependencies": {
     "bluebird": "^3.4.1",
     "browser-sync": "^2.14.0",

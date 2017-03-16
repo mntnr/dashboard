@@ -1,6 +1,7 @@
 Promise = require 'bluebird'
 Octokat = require 'octokat'
 request = require 'request-promise'
+isGithubUserOrOrg = require 'is-github-user-or-org'
 {log} = require 'lightsaber'
 {flatten, merge, round, sample, size, sortBy} = require 'lodash'
 Wave = require 'loading-wave'
@@ -106,12 +107,22 @@ class RepoMatrix
   # TODO Allow users as well as orgs
   @loadRepos: ->
     Promise.map ORGS, (org) =>
-      github.orgs(org).repos.fetch(per_page: 100)
-      .then (firstPage) =>
-        reposThisOrg = @thisAndFollowingPages(firstPage)
-      .then (repos) =>
-        Promise.map repos, (repo) =>
-          @getPRCounts(repo)
+      isGithubUserOrOrg org
+      .then (res) =>
+        if res == 'Organization'
+          github.orgs(org).repos.fetch(per_page: 100)
+          .then (firstPage) =>
+            reposThisOrg = @thisAndFollowingPages(firstPage)
+          .then (repos) =>
+            Promise.map repos, (repo) =>
+              @getPRCounts(repo)
+        else
+          github.users(org).repos.fetch(per_page: 100)
+          .then (firstPage) =>
+            reposThisOrg = @thisAndFollowingPages(firstPage)
+          .then (repos) =>
+            Promise.map repos, (repo) =>
+              @getPRCounts(repo)
     .then (allRepos) =>
       Promise.map INDIVIDUAL_REPOS, (repoName) =>
         github.repos.apply(null, repoName.split('/')).fetch()
