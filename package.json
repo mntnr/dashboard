@@ -1,8 +1,8 @@
 {
-  "name": "ipfs-project-repos",
+  "name": "maintainer-dashboard",
   "version": "0.0.0",
-  "description": "IPFS repository info",
-  "author": "Harlan T Wood <code@harlantwood.net>",
+  "description": "Maintainer GitHub Dashboard",
+  "author": "Richard Littauer <richard.littauer@gmail.com>",
   "license": "MIT",
   "scripts": {
     "copy-css": "cp node_modules/datatables.net-dt/css/jquery.dataTables.css public/styles/ && cp node_modules/datatables.net-fixedheader-dt/css/fixedHeader.dataTables.css public/styles/",
@@ -41,6 +41,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:ipfs/project-repos.git"
+    "url": "git@github.com:RichardLitt/maintainer-dashboard.git"
   }
 }
