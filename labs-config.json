@@ -1,9 +1,9 @@
 {
   "orgs": [
-    "orbitdb"
+    "mntnr"
   ],
   "individualRepos": [
-    "ipfs/go-ipfs",
-    "ipfs/ipfs"
+    "RichardLitt/maintainer-dashboard",
+    "RichardLitt/knowledge"
   ]
 }
