@@ -75,7 +75,7 @@ class RepoMatrix
     @loadRepos()
     .catch (err) =>
       @killLoadingWave @wave
-      errMsg = 'Unable to access GitHub. <a href="https://twitter.com/githubstatus">Is it down?</a>'
+      errMsg = 'Unable to access GitHub. <a href="https://twitter.com/githubstatus">Is it down?</a>' + err
       $(document.body).append(errMsg)
       throw err
     .then (repos) => @getFiles repos
