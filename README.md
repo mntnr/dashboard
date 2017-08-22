@@ -1,16 +1,9 @@
-# project-repos
+# Maintainer Dashboard
 
-[![](https://img.shields.io/badge/made%20by-Protocol%20Labs-blue.svg?style=flat-square)](http://ipn.io)
-[![](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](http://ipfs.io/)
-[![](https://img.shields.io/badge/freenode-%23ipfs-blue.svg?style=flat-square)](http://webchat.freenode.net/?channels=%23ipfs)
-[![standard-readme compliant](https://img.shields.io/badge/standard--readme-OK-green.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
+> Maintainer GitHub Dashboard
 
-> Project health metrics
-
-This is a status board for the github repositories within the IPFS organization.
+This is a status board for repositorities within a GitHub organization.
 It displays build health, and other measures that we care about internally.
-
-Check out the latest here: <http://project-repos.ipfs.io/>.
 
 Hosted on IPFS!
 
@@ -22,6 +15,10 @@ Hosted on IPFS!
 - [Deploy](#deploy)
 - [Contribute](#contribute)
 - [License](#license)
+
+## Background
+
+This work started with [ipfs/project-repos](https://github.com/ipfs/project-repos). However, as I needed to do some work on it and wanted it to be extendable beyond IPFS, and as I did not have access to the issues for that repository, I have forked it, deleted the history, and made my own copy, here.
 
 ## Install
 
@@ -53,11 +50,7 @@ To deploy this, after merging any new PRs, follow these steps:
 
 ## Contribute
 
-If you would like to contribute code to this repository, please dive in! Check out [the issues](//github.com/ipfs/project-repos/issues). Clicking the banner above will lead you to the general [IPFS community contribute guidelines](https://github.com/ipfs/community/blob/master/contributing.md), if you would like to contribute in other ways.
-
-If you would like to have your repository listed here, please move it to the IPFS organization. If you are not part of the organization, ask someone if you can join, or fork this project and set it up for your own repositories.
-
-[![](https://cdn.rawgit.com/jbenet/contribute-ipfs-gif/master/img/contribute.gif)](https://github.com/ipfs/community/blob/master/contributing.md)
+If you would like to contribute code to this repository, please dive in! Check out [the issues](//github.com/RichardLitt/maintainer-dashboard/issues).
 
 ## License
 
