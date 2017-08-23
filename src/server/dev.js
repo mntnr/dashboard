@@ -33,7 +33,7 @@ var startBrowserSync = () =>
       baseDir   : './',
       middleware: proxyIpfsCalls,
     },
-    logLevel: 'debug'
+    logLevel: 'debug',
   })
 
 var proxyIpfsCalls = (req, res, next) => {

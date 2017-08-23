@@ -10,13 +10,12 @@ const Promise = require('bluebird')
 const Octokat = require('octokat')
 const request = require('request-promise')
 const isGithubUserOrOrg = require('is-github-user-or-org')
-const { log } = require('lightsaber')
 const { flatten, merge, round, sample, size, sortBy } = require('lodash')
 const Wave = require('loading-wave')
 const $ = require('jquery')
 require('datatables.net')()
 require('datatables.net-fixedheader')()
-const { a, div, img, raw, render, renderable, span, table, tbody, td, text, th, thead, tr } = require('teacup')
+const { a, div, img, renderable, table, tbody, td, text, th, thead, tr } = require('teacup')
 
 $.fn.center = function () {
   this.css('position', 'absolute')
@@ -217,7 +216,6 @@ let RepoMatrix = (() => {
     }
 
     static start () {
-      console.log('Hi mom')
       this.wave = this.loadingWave()
       return this.loadRepos()
         .catch(err => {
@@ -265,14 +263,11 @@ let RepoMatrix = (() => {
     static loadRepos () {
       return Promise.map(ORGS, org => {
         return isGithubUserOrOrg(org).then(res => {
-          let reposThisOrg
           if (res === 'Organization') {
             return github
               .orgs(org)
               .repos.fetch({ per_page: 100 })
-              .then(firstPage => {
-                return (reposThisOrg = this.thisAndFollowingPages(firstPage))
-              })
+              .then(firstPage => this.thisAndFollowingPages(firstPage))
               .then(repos => {
                 return Promise.map(repos, repo => {
                   return this.getPRCounts(repo)
@@ -282,9 +277,7 @@ let RepoMatrix = (() => {
             return github
               .users(org)
               .repos.fetch({ per_page: 100 })
-              .then(firstPage => {
-                return (reposThisOrg = this.thisAndFollowingPages(firstPage))
-              })
+              .then(firstPage => this.thisAndFollowingPages(firstPage))
               .then(repos => {
                 return Promise.map(repos, repo => {
                   return this.getPRCounts(repo)
@@ -340,7 +333,9 @@ let RepoMatrix = (() => {
         repo.files = {}
         return Promise.map(FILES, fileName => {
           const source = sample(RAW_GITHUB_SOURCES)
-          return request({ uri: source(repo.fullName, fileName) }).then(fileContents => (repo.files[fileName] = fileContents)).catch(err => {})
+          return request({ uri: source(repo.fullName, fileName) })
+            .then(fileContents => (repo.files[fileName] = fileContents))
+            .catch(err => console.log(err))
         })
       }).then(() => repos)
     }

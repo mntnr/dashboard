@@ -13,8 +13,8 @@
     "dev:watch": "nodemon --watch src --watch public/index.html  --watch public/styles --exec 'browserify' src/index.js --outfile public/bundle.js",
     "publish": "npm-run-all --silent build ipfs",
     "ipfs": "open https://ipfs.io/ipfs/`ipfs add -q -r public | tail -n 1`",
-    "lint": "eslint .",
-    "fix": "eslint . --fix"
+    "lint": "eslint src/.",
+    "fix": "eslint src/. --fix"
   },
   "dependencies": {
     "is-github-user-or-org": "^1.0.2"
