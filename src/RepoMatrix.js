@@ -40,7 +40,7 @@ let RepoMatrix = (() => {
       let LICENSE
       let PATENTS
       let README
-      config = require('../labs-config.json')
+      config = require('../data.json')
       ORGS = config.orgs
       INDIVIDUAL_REPOS = config.individualRepos
 
