@@ -15,7 +15,7 @@ const Wave = require('loading-wave')
 const $ = require('jquery')
 require('datatables.net')()
 require('datatables.net-fixedheader')()
-const { a, div, img, renderable, table, tbody, td, text, th, thead, tr } = require('teacup')
+const { a, div, p, img, renderable, table, tbody, td, text, th, thead, tr } = require('teacup')
 
 $.fn.center = function () {
   this.css('position', 'absolute')
@@ -210,7 +210,10 @@ let RepoMatrix = (() => {
         return div({ class: 'stats' }, () => {
           const now = new Date().getTime() / 1000 // seconds
           const minutesUntilReset = (reset - now) / 60 // minutes
-          return `Github API calls: ${remaining} remaining of ${limit} limit per hour; clean slate in: ${round(minutesUntilReset, 1)} minutes`
+          return p(() => {
+            text(`Github API calls: ${remaining} remaining of ${limit} limit per hour; clean slate in: ${round(minutesUntilReset, 1)} minutes. `)
+            a({ href: 'https://status.github.com/' }, () => 'GitHub status.')
+          })
         })
       })
     }
@@ -220,7 +223,7 @@ let RepoMatrix = (() => {
       return this.loadRepos()
         .catch(err => {
           this.killLoadingWave(this.wave)
-          const errMsg = `Unable to access GitHub. <a href="https://twitter.com/githubstatus">Is it down?</a>${err}`
+          const errMsg = `Unable to access GitHub. <a href="https://status.github.com/">Is it down?</a>${err}`
           $(document.body).append(errMsg)
           throw err
         })
