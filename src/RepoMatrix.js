@@ -38,7 +38,7 @@ let RepoMatrix = (() => {
   var RepoMatrix = class RepoMatrix {
     static initClass () {
       let LICENSE
-      let PATENTS
+      let CONTRIBUTE
       let README
       config = require('../data.json')
       ORGS = config.orgs
@@ -97,7 +97,7 @@ let RepoMatrix = (() => {
 
       README_ITEMS = merge(README_SECTIONS, README_OTHER)
 
-      FILES = [(README = 'README.md'), (LICENSE = 'LICENSE'), (PATENTS = 'PATENTS')]
+      FILES = [(README = 'README.md'), (LICENSE = 'LICENSE'), (CONTRIBUTE = 'CONTRIBUTE')]
 
       github = new Octokat({ token: process.env.MAINTAINER_DASHBOARD })
 
@@ -121,7 +121,7 @@ let RepoMatrix = (() => {
               th(() => 'exists') // README.md
               th(() => '> 500 chars') // README.md
               th(() => 'license') // Files
-              th(() => 'patents') // Files
+              th(() => 'contribute') // Files
               for (name in README_ITEMS) {
                 // Sections
                 th(() => name)
@@ -146,7 +146,7 @@ let RepoMatrix = (() => {
                 td({ class: 'no-padding' }, () => this.check(files[README])) // README.md
                 td({ class: 'no-padding' }, () => this.check((files[README] != null ? files[README].length : undefined) > 500)) // README.md
                 td({ class: 'no-padding' }, () => this.check(files[LICENSE])) // Files
-                td({ class: 'no-padding' }, () => this.check(files[PATENTS])) // Files
+                td({ class: 'no-padding' }, () => this.check(files[CONTRIBUTE])) // Files
                 for (name in README_ITEMS) {
                   // Badges
                   template = README_ITEMS[name]
