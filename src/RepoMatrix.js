@@ -106,16 +106,16 @@ let RepoMatrix = (() => {
           let name
           thead(() => {
             tr(() => {
-              th(() => {})
-              th({ class: 'left', colspan: 2 }, () => 'Builds')
-              th({ class: 'left', colspan: 2 }, () => 'README.md')
-              th({ class: 'left', colspan: 3 }, () => 'Files')
-              th({ class: 'left', colspan: size(README_ITEMS) }, () => 'Sections')
-              th({ class: 'left', colspan: size(README_BADGES) }, () => 'Badges')
+              th({ class: 'begin' }, () => {})
+              th({ class: 'left builds', colspan: 2 }, () => 'Builds')
+              th({ class: 'left readme', colspan: 2 }, () => 'README.md')
+              th({ class: 'left files', colspan: 3 }, () => 'Files')
+              th({ class: 'left sections', colspan: size(README_ITEMS) }, () => 'Sections')
+              th({ class: 'left badges', colspan: size(README_BADGES) }, () => 'Badges')
               return th({ class: 'left', colspan: 3 }, () => 'Github')
             })
             return tr(() => {
-              th({ class: 'left' }, () => 'Repo') // Name
+              th({ class: 'left repo' }, () => 'Repo') // Name
               th({ class: 'left' }, () => 'Travis CI') // Builds
               th({ class: 'left' }, () => 'Circle CI') // Builds
               th(() => 'exists') // README.md
