@@ -194,19 +194,16 @@ let RepoMatrix = (() => {
 
       this.check = renderable(success => {
         if (success === 'na') {
-          return div({ class: '' }, () => {
-          // return div({ class: 'na' }, () => {
-            i({ class: '' }, () => {})
+          return div({ class: 'na' }, () => {
+            i({ class: 'mdi mdi-minus' }, () => '-')
           })
         } else if (success) {
           return div({ class: 'success' }, () => {
-            // i({ class: 'mdi mdi-check' }, () => {})
-            i({ class: 'mdi mdi-checkbox-blank-circle-outline' }, () => {})
+            i({ class: 'mdi mdi-checkbox-blank-circle-outline' }, () => '✓')
           })
         } else {
           return div({ class: 'failure' }, () => {
-            // i({ class: 'mdi mdi-close' }, () => {})
-            i({ class: 'mdi mdi-checkbox-blank-circle' }, () => {})
+            i({ class: 'mdi mdi-checkbox-blank-circle' }, () => '✗')
           })
         }
       })

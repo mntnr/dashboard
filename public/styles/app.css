@@ -1,3 +1,7 @@
+html {
+  width: 100%;
+}
+
 /*font-family: 'Bitter', serif;
 font-family: 'Vesper Libre', serif;
 font-family: 'Cabin', sans-serif;
@@ -144,4 +148,9 @@ font-family: 'Cabin', sans-serif;
   margin: 0 0.2rem;
 }
 
-
+.repo-name {
+/*
+    @todo: hardcoding. need to figure out how to make it stretch to name, and no wrapping
+*/
+  min-width: 230px; 
+}
