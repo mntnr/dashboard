@@ -48,7 +48,7 @@ th.left {
 
 tr:nth-of-type(1){
   background-color: #FF6B59;
-  color: #909090;
+  color: #f5deb3;
   font-weight: 900;
   font-size: 1rem;
   padding: 0.5rem !important;
@@ -74,7 +74,7 @@ table.dataTable.compact thead td {
 
 table.dataTable.compact tbody th, 
 table.dataTable.compact tbody td {
-  padding: 0.75rem 1rem 0.75rem 1.5rem
+  padding: 0.75rem 1rem;
 }
 
 table.dataTable.cell-border tbody th, 
@@ -115,6 +115,16 @@ font-family: 'Cabin', sans-serif;
 .flex-wrapper { display: flex; }
 .flex-wrapper a { display: inline-flex; }
 
+.name-org {
+  font-size: 0.8rem;
+  color: #83a5af;
+}
+.name-repo {
+}
 
+.separator {
+  color: #83a5af;
+  margin: 0 0.2rem;
+}
 
 
