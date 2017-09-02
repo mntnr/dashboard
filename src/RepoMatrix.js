@@ -215,12 +215,14 @@ let RepoMatrix = (() => {
       )
 
       this.circle = renderable(repoFullName =>
-        a({ href: `https://circleci.com/gh/${repoFullName}` }, () =>
-          img({
-            src    : `https://circleci.com/gh/${repoFullName}.svg?style=svg`,
-            onError: "this.parentElement.href = 'https://circleci.com/add-projects'; this.src = 'images/circle-ci-no-builds.svg'",
-          })
-        )
+        div({ class: 'flex-wrapper' }, () => {
+          a({ href: `https://circleci.com/gh/${repoFullName}` }, () =>
+            img({
+              src    : `https://circleci.com/gh/${repoFullName}.svg?style=svg`,
+              onError: "this.parentElement.href = 'https://circleci.com/add-projects'; this.src = 'images/circle-ci-no-builds.svg'",
+            })
+          )
+        })
       )
 
       this.stats = renderable(info => {
