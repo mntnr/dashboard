@@ -10,12 +10,12 @@ const Promise = require('bluebird')
 const Octokat = require('octokat')
 const request = require('request-promise')
 const isGithubUserOrOrg = require('is-github-user-or-org')
-const { flatten, merge, round, sample, size, sortBy } = require('lodash')
+const { flatten, merge, round, sample, size, sortBy, split } = require('lodash')
 const Wave = require('loading-wave')
 const $ = require('jquery')
 require('datatables.net')()
 require('datatables.net-fixedheader')()
-const { a, div, p, i, img, renderable, table, tbody, td, text, th, thead, tr } = require('teacup')
+const { a, div, p, i, img, span, renderable, table, tbody, td, text, th, thead, tr } = require('teacup')
 
 $.fn.center = function () {
   this.css('position', 'absolute')
@@ -140,7 +140,20 @@ let RepoMatrix = (() => {
               tr(() => {
                 let expectedMarkdown
                 let template
-                td({ class: 'left' }, () => a({ href: `https://github.com/${fullName}` }, () => fullName)) // Name
+                let nameArray = split(fullName, '/')
+                td({ class: 'left repo-name' }, () => {
+                  a({ 
+                    class: 'name-org', 
+                    href: `https://github.com/${nameArray[0]}`,
+                    target: '_name'
+                  }, () => nameArray[0])
+                  span({ class: 'separator'  }, () => '/')
+                  a({ 
+                    class: 'name-repo', 
+                    href: `https://github.com/${nameArray[0]}/${nameArray[1]}`,
+                    target: '_name'
+                  }, () => nameArray[1])
+                })
                 td({ class: 'left' }, () => this.travis(fullName)) // Builds
                 td({ class: 'left' }, () => this.circle(fullName)) // Builds
                 td({ class: 'no-padding' }, () => this.check(files[README])) // README.md
