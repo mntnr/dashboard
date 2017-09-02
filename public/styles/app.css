@@ -50,7 +50,7 @@ th.left {
   text-align: center;
 }
 
-tr:nth-of-type(1){
+thead tr:nth-of-type(1){
   background-color: #FF6B59;
   color: #f5deb3;
   font-weight: 900;
@@ -59,7 +59,7 @@ tr:nth-of-type(1){
 }
 
 
-tr:nth-of-type(2){
+thead tr:nth-of-type(2){
   background-color: #e6e5ea;
   width: 165px;
   color: #528290;
@@ -153,4 +153,17 @@ font-family: 'Cabin', sans-serif;
     @todo: hardcoding. need to figure out how to make it stretch to name, and no wrapping
 */
   min-width: 230px; 
+}
+
+.icon-tilde {
+  color: #afaeae;
+}
+
+.icon-header-star-outline {
+  font-size: 1.4rem;
+}
+
+.icon-star-outline {
+  font-size: 1.2rem;
+  color: lightgray;
 }
