@@ -14,7 +14,7 @@ const Wave = require('loading-wave')
 const $ = require('jquery')
 require('datatables.net')()
 require('datatables.net-fixedheader')()
-const { a, div, p, img, renderable, table, tbody, td, text, th, thead, tr } = require('teacup')
+const { a, div, p, i, img, renderable, table, tbody, td, text, th, thead, tr } = require('teacup')
 
 $.fn.center = function () {
   this.css('position', 'absolute')
@@ -181,11 +181,20 @@ let RepoMatrix = (() => {
 
       this.check = renderable(success => {
         if (success === 'na') {
-          return div({ class: 'na' }, () => '-')
+          return div({ class: '' }, () => {
+          // return div({ class: 'na' }, () => {
+            i({ class: '' }, () => {})
+          })
         } else if (success) {
-          return div({ class: 'success' }, () => '✓')
+          return div({ class: 'success' }, () => {
+            // i({ class: 'mdi mdi-check' }, () => {})
+            i({ class: 'mdi mdi-checkbox-blank-circle-outline' }, () => {})
+          })
         } else {
-          return div({ class: 'failure' }, () => '✗')
+          return div({ class: 'failure' }, () => {
+            // i({ class: 'mdi mdi-close' }, () => {})
+            i({ class: 'mdi mdi-checkbox-blank-circle' }, () => {})
+          })
         }
       })
 
