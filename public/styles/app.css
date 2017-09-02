@@ -1,7 +1,17 @@
+/*font-family: 'Bitter', serif;
+font-family: 'Vesper Libre', serif;
+font-family: 'Cabin', sans-serif;
+font-family: 'Lato', sans-serif;
+
+*/
 .success {
-  background-color: lightgreen;
-  color: black;
-  line-height: 2em;
+  color: #5BFFAE;
+  font-weight: bold;
+  /* background:url("../checkmark.gif") no-repeat 0 50%; */
+}
+
+.failure {
+ color: #adadad;
 }
 
 .na {
@@ -10,14 +20,10 @@
   line-height: 2em;
 }
 
-.failure {
-  line-height: 2em;
-  background-color: darkred;
-  color: white;
-}
+
 
 td.no-padding {
-  padding: 0px !important;
+  padding: 0px ! important;
 }
 
 td, th {
@@ -27,3 +33,88 @@ td, th {
 td.left, th.left {
   text-align: left;
 }
+
+
+/* 
+  jQuery.dataTables.css overrides
+  Should come last.
+  Doing this to prevent modifying plugin source, 
+  ensuring compatibility with library version updates
+*/
+
+
+th {
+  font-family: 'Inconsolata', monospace;
+}
+
+th.left {
+  text-align: center;
+}
+
+tr:nth-of-type(1){
+  background-color: #f3eaea;
+  color: #909090;
+  font-weight: 900;
+  font-size: 1rem;
+  padding: 0.5rem !important;
+}
+
+tr:nth-of-type(2){
+  background-color: #FF6B59;
+  width: 165px;
+  color: #923747;
+  font-size: 0.95rem;
+}
+
+table.dataTable thead th, 
+table.dataTable thead td {
+  border-bottom: 0;
+}
+
+
+table.dataTable.compact thead th, 
+table.dataTable.compact thead td {
+  padding: 0.3rem 0.6rem;
+}
+
+table.dataTable.compact tbody th, 
+table.dataTable.compact tbody td {
+  padding: 0.75em 1rem 0.75rem 1.5rem
+}
+
+table.dataTable.cell-border tbody th, 
+table.dataTable.cell-border tbody td {
+  border-right: 0;
+}
+
+td a {
+  color: #2D5F6E;
+  font-family: 'Cabin', sans-serif;
+  font-size: 1rem;
+}
+
+/* .begin { background-color: white; }
+
+.builds { background-color: #d11f3f; }
+.files { background-color: #ff615d; }
+.sections { background-color: #ffa483; }
+.badges { background-color: #dad8c0; }
+
+ */
+
+/*
+font-family: 'Bitter', serif;
+font-family: 'Vesper Libre', serif;
+font-family: 'Cabin', sans-serif;
+
+
+
+
+
+
+
+
+
+
+
+
