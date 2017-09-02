@@ -203,7 +203,16 @@ let RepoMatrix = (() => {
         }
       })
 
-      this.travis = renderable(repoFullName => a({ href: `https://travis-ci.org/${repoFullName}` }, () => img({ src: `https://travis-ci.org/${repoFullName}.svg?branch=master` })))
+      this.travis = renderable(repoFullName => 
+        div({ class: 'flex-wrapper' }, () => {
+          a({ href: `https://travis-ci.org/${repoFullName}` }, () => 
+            img({ 
+              src: `https://travis-ci.org/${repoFullName}.svg?branch=master`, 
+              class: 'travis-badge-render-fix' 
+            })
+          )
+        })
+      )
 
       this.circle = renderable(repoFullName =>
         a({ href: `https://circleci.com/gh/${repoFullName}` }, () =>

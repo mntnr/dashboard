@@ -74,7 +74,7 @@ table.dataTable.compact thead td {
 
 table.dataTable.compact tbody th, 
 table.dataTable.compact tbody td {
-  padding: 0.75em 1rem 0.75rem 1.5rem
+  padding: 0.75rem 1rem 0.75rem 1.5rem
 }
 
 table.dataTable.cell-border tbody th, 
@@ -112,9 +112,8 @@ font-family: 'Cabin', sans-serif;
 .mdi-checkbox-blank-circle-outline {
 }
 
-
-
-
+.flex-wrapper { display: flex; }
+.flex-wrapper a { display: inline-flex; }
 
 
 
