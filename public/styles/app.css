@@ -54,10 +54,11 @@ tr:nth-of-type(1){
   padding: 0.5rem !important;
 }
 
+
 tr:nth-of-type(2){
-  background-color: #f3eaea;
+  background-color: #e6e5ea;
   width: 165px;
-  color: #923747;
+  color: #528290;
   font-size: 0.95rem;
 }
 
@@ -66,6 +67,11 @@ table.dataTable thead td {
   border-bottom: 0;
 }
 
+/* 
+tr:nth-of-type(2) th td {
+  border-bottom: 1px solid #4a4242;
+}
+ */
 
 table.dataTable.compact thead th, 
 table.dataTable.compact thead td {
@@ -118,8 +124,19 @@ font-family: 'Cabin', sans-serif;
 .name-org {
   font-size: 0.8rem;
   color: #83a5af;
+  text-decoration: none;
 }
+
 .name-repo {
+  color: #528290;
+  font-weight: bold;
+  text-decoration: none;
+  padding: 1px 0;
+}
+
+.name-repo:hover,
+.name-org:hover {
+  border-bottom: solid 1px #cccaca;
 }
 
 .separator {
