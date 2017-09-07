@@ -136,10 +136,11 @@ font-family: 'Cabin', sans-serif;
 
 
 .mdi-checkbox-blank-circle {
-  color: #fbad91;
+  color: #9ab3ff;
 }
 
 .mdi-checkbox-blank-circle-outline {
+  color: #d9d9e0;
 }
 
 .flex-wrapper { display: flex; }
