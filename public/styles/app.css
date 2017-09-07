@@ -18,6 +18,26 @@ font-family: 'Lato', sans-serif;
   color: #adadad;
 }
 
+/* 
+  We're using Material Design icon library
+  to display icons, which attaches it to the :before psuedo
+  class. We dont want to see the ascii character, but we do
+  want to leave it in the DOM/flow so the sorting via the 
+  Datatable jQuery plugin works.  
+*/
+
+.success i,
+.failure i,
+.na i {
+  visibility: hidden;
+}
+
+.success i:before,
+.failure i:before,
+.na i:before {
+  visibility: visible;
+}
+
 /* .na {
   color: grey;
   line-height: 2em;
@@ -165,5 +185,5 @@ font-family: 'Cabin', sans-serif;
 
 .icon-star-outline {
   font-size: 1.2rem;
-  color: lightgray;
+  color: #565fe4;
 }
