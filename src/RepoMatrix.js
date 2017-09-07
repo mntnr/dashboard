@@ -142,7 +142,7 @@ let RepoMatrix = (() => {
                 let template
                 let nameArray = split(fullName, '/')
 
-                
+
                 td({ class: 'left repo-name' }, () => {
                   a({ 
                     class: 'name-org', 
