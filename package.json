@@ -17,7 +17,8 @@
     "fix": "eslint src/. --fix"
   },
   "dependencies": {
-    "is-github-user-or-org": "^1.0.2"
+    "is-github-user-or-org": "^1.0.2",
+    "mdi": "^2.0.46"
   },
   "devDependencies": {
     "babel-cli": "6.24.1",

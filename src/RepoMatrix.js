@@ -10,12 +10,12 @@ const Promise = require('bluebird')
 const Octokat = require('octokat')
 const request = require('request-promise')
 const isGithubUserOrOrg = require('is-github-user-or-org')
-const { flatten, merge, round, sample, size, sortBy } = require('lodash')
+const { flatten, merge, round, sample, size, sortBy, split } = require('lodash')
 const Wave = require('loading-wave')
 const $ = require('jquery')
 require('datatables.net')()
 require('datatables.net-fixedheader')()
-const { a, div, p, img, renderable, table, tbody, td, text, th, thead, tr } = require('teacup')
+const { a, div, p, i, img, span, renderable, table, tbody, td, text, th, thead, tr } = require('teacup')
 
 $.fn.center = function () {
   this.css('position', 'absolute')
@@ -106,16 +106,16 @@ let RepoMatrix = (() => {
           let name
           thead(() => {
             tr(() => {
-              th(() => {})
-              th({ class: 'left', colspan: 2 }, () => 'Builds')
-              th({ class: 'left', colspan: 2 }, () => 'README.md')
-              th({ class: 'left', colspan: 3 }, () => 'Files')
-              th({ class: 'left', colspan: size(README_ITEMS) }, () => 'Sections')
-              th({ class: 'left', colspan: size(README_BADGES) }, () => 'Badges')
+              th({ class: 'begin' }, () => {})
+              th({ class: 'left builds', colspan: 2 }, () => 'Builds')
+              th({ class: 'left readme', colspan: 2 }, () => 'README.md')
+              th({ class: 'left files', colspan: 3 }, () => 'Files')
+              th({ class: 'left sections', colspan: size(README_ITEMS) }, () => 'Sections')
+              th({ class: 'left badges', colspan: size(README_BADGES) }, () => 'Badges')
               return th({ class: 'left', colspan: 3 }, () => 'Github')
             })
             return tr(() => {
-              th({ class: 'left' }, () => 'Repo') // Name
+              th({ class: 'left repo' }, () => 'Repo') // Name
               th({ class: 'left' }, () => 'Travis CI') // Builds
               th({ class: 'left' }, () => 'Circle CI') // Builds
               th(() => 'exists') // README.md
@@ -140,7 +140,22 @@ let RepoMatrix = (() => {
               tr(() => {
                 let expectedMarkdown
                 let template
-                td({ class: 'left' }, () => a({ href: `https://github.com/${fullName}` }, () => fullName)) // Name
+                let nameArray = split(fullName, '/')
+
+
+                td({ class: 'left repo-name' }, () => {
+                  a({ 
+                    class: 'name-org', 
+                    href: `https://github.com/${nameArray[0]}`,
+                    target: '_name'
+                  }, () => nameArray[0])
+                  span({ class: 'separator'  }, () => '/')
+                  a({ 
+                    class: 'name-repo', 
+                    href: `https://github.com/${nameArray[0]}/${nameArray[1]}`,
+                    target: '_name'
+                  }, () => nameArray[1])
+                })
                 td({ class: 'left' }, () => this.travis(fullName)) // Builds
                 td({ class: 'left' }, () => this.circle(fullName)) // Builds
                 td({ class: 'no-padding' }, () => this.check(files[README])) // README.md
@@ -186,23 +201,40 @@ let RepoMatrix = (() => {
 
       this.check = renderable(success => {
         if (success === 'na') {
-          return div({ class: 'na' }, () => '-')
+          return div({ class: 'na' }, () => {
+            i({ class: 'mdi mdi-minus' }, () => '-')
+          })
         } else if (success) {
-          return div({ class: 'success' }, () => '✓')
+          return div({ class: 'success' }, () => {
+            i({ class: 'mdi mdi-checkbox-blank-circle-outline' }, () => '✓')
+          })
         } else {
-          return div({ class: 'failure' }, () => '✗')
+          return div({ class: 'failure' }, () => {
+            i({ class: 'mdi mdi-checkbox-blank-circle' }, () => '✗')
+          })
         }
       })
 
-      this.travis = renderable(repoFullName => a({ href: `https://travis-ci.org/${repoFullName}` }, () => img({ src: `https://travis-ci.org/${repoFullName}.svg?branch=master` })))
+      this.travis = renderable(repoFullName => 
+        div({ class: 'flex-wrapper' }, () => {
+          a({ href: `https://travis-ci.org/${repoFullName}` }, () => 
+            img({ 
+              src: `https://travis-ci.org/${repoFullName}.svg?branch=master`, 
+              class: 'travis-badge-render-fix' 
+            })
+          )
+        })
+      )
 
       this.circle = renderable(repoFullName =>
-        a({ href: `https://circleci.com/gh/${repoFullName}` }, () =>
-          img({
-            src    : `https://circleci.com/gh/${repoFullName}.svg?style=svg`,
-            onError: "this.parentElement.href = 'https://circleci.com/add-projects'; this.src = 'images/circle-ci-no-builds.svg'",
-          })
-        )
+        div({ class: 'flex-wrapper' }, () => {
+          a({ href: `https://circleci.com/gh/${repoFullName}` }, () =>
+            img({
+              src    : `https://circleci.com/gh/${repoFullName}.svg?style=svg`,
+              onError: "this.parentElement.href = 'https://circleci.com/add-projects'; this.src = 'images/circle-ci-no-builds.svg'",
+            })
+          )
+        })
       )
 
       this.stats = renderable(info => {

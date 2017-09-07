@@ -1,23 +1,50 @@
-.success {
-  background-color: lightgreen;
-  color: black;
-  line-height: 2em;
+html {
+  width: 100%;
 }
 
-.na {
-  background-color: white;
-  color: grey;
-  line-height: 2em;
+/*font-family: 'Bitter', serif;
+font-family: 'Vesper Libre', serif;
+font-family: 'Cabin', sans-serif;
+font-family: 'Lato', sans-serif;
+
+*/
+.success {
+  color: #5BFFAE;
+  font-weight: bold;
+  /* background:url("../checkmark.gif") no-repeat 0 50%; */
 }
 
 .failure {
-  line-height: 2em;
-  background-color: darkred;
-  color: white;
+  color: #adadad;
 }
 
+/* 
+  We're using Material Design icon library
+  to display icons, which attaches it to the :before psuedo
+  class. We dont want to see the ascii character, but we do
+  want to leave it in the DOM/flow so the sorting via the 
+  Datatable jQuery plugin works.  
+*/
+
+.success i,
+.failure i,
+.na i {
+  visibility: hidden;
+}
+
+.success i:before,
+.failure i:before,
+.na i:before {
+  visibility: visible;
+}
+
+/* .na {
+  color: grey;
+  line-height: 2em;
+}
+ */
 td.no-padding {
-  padding: 0px !important;
+  padding: 0px ! important;
 }
 
 td, th {
@@ -26,4 +53,138 @@ td, th {
 
 td.left, th.left {
   text-align: left;
+}
+
+/* 
+  jQuery.dataTables.css overrides
+  Should come last.
+  Doing this to prevent modifying plugin source, 
+  ensuring compatibility with library version updates
+*/
+
+th {
+  font-family: 'Inconsolata', monospace;
+}
+
+th.left {
+  text-align: center;
+}
+
+thead tr:nth-of-type(1){
+  background-color: #FF6B59;
+  color: #f5deb3;
+  font-weight: 900;
+  font-size: 1rem;
+  padding: 0.5rem !important;
+}
+
+
+thead tr:nth-of-type(2){
+  background-color: #e6e5ea;
+  width: 165px;
+  color: #528290;
+  font-size: 0.95rem;
+}
+
+table.dataTable thead th, 
+table.dataTable thead td {
+  border-bottom: 0;
+}
+
+/* 
+tr:nth-of-type(2) th td {
+  border-bottom: 1px solid #4a4242;
+}
+ */
+
+table.dataTable.compact thead th, 
+table.dataTable.compact thead td {
+  padding: 0.3rem 0.6rem;
+}
+
+table.dataTable.compact tbody th, 
+table.dataTable.compact tbody td {
+  padding: 0.75rem 1rem;
+}
+
+table.dataTable.cell-border tbody th, 
+table.dataTable.cell-border tbody td {
+  border-right: 0;
+}
+
+td a {
+  color: #2D5F6E;
+  font-family: 'Cabin', sans-serif;
+  font-size: 1rem;
+}
+
+/* .begin { background-color: white; }
+
+.builds { background-color: #d11f3f; }
+.files { background-color: #ff615d; }
+.sections { background-color: #ffa483; }
+.badges { background-color: #dad8c0; }
+
+ */
+
+/*
+font-family: 'Bitter', serif;
+font-family: 'Vesper Libre', serif;
+font-family: 'Cabin', sans-serif;
+
+*/
+
+
+.mdi-checkbox-blank-circle {
+  color: #9ab3ff;
+}
+
+.mdi-checkbox-blank-circle-outline {
+  color: #d9d9e0;
+}
+
+.flex-wrapper { display: flex; }
+.flex-wrapper a { display: inline-flex; }
+
+.name-org {
+  font-size: 0.8rem;
+  color: #83a5af;
+  text-decoration: none;
+}
+
+.name-repo {
+  color: #528290;
+  font-weight: bold;
+  text-decoration: none;
+  padding: 1px 0;
+}
+
+.name-repo:hover,
+.name-org:hover {
+  border-bottom: solid 1px #cccaca;
+}
+
+.separator {
+  color: #83a5af;
+  margin: 0 0.2rem;
+}
+
+.repo-name {
+/*
+    @todo: hardcoding. need to figure out how to make it stretch to name, and no wrapping
+*/
+  min-width: 230px; 
+}
+
+.icon-tilde {
+  color: #afaeae;
+}
+
+.icon-header-star-outline {
+  font-size: 1.4rem;
+}
+
+.icon-star-outline {
+  font-size: 1.2rem;
+  color: #565fe4;
 }
