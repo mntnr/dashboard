@@ -8,9 +8,8 @@
  */
 const Promise = require('bluebird')
 const Octokat = require('octokat')
-const request = require('request-promise')
 const isGithubUserOrOrg = require('is-github-user-or-org')
-const { flatten, merge, round, sample, size, sortBy } = require('lodash')
+const { flatten, merge, round, size, sortBy } = require('lodash')
 const Wave = require('loading-wave')
 const $ = require('jquery')
 require('datatables.net')()
@@ -28,7 +27,6 @@ let RepoMatrix = (() => {
   let config
   let ORGS
   let INDIVIDUAL_REPOS
-  let RAW_GITHUB_SOURCES
   let README_BADGES
   let README_SECTIONS
   let README_OTHER
@@ -43,12 +41,6 @@ let RepoMatrix = (() => {
       config = require('../data.json')
       ORGS = config.orgs
       INDIVIDUAL_REPOS = config.individualRepos
-
-      RAW_GITHUB_SOURCES = [
-        (repoFullName, path) => `https://raw.githubusercontent.com/${repoFullName}/master/${path}`,
-        // (repoFullName, path) -> "https://rawgit.com/#{repoFullName}/master/#{path}"
-        // (repoFullName, path) -> "https://raw.githack.com/#{repoFullName}/master/#{path}"  # funky error messages on 404
-      ]
 
       README_BADGES = {
         Travis (repoFullName) {
@@ -335,9 +327,8 @@ let RepoMatrix = (() => {
       return Promise.map(repos, repo => {
         repo.files = {}
         return Promise.map(FILES, fileName => {
-          const source = sample(RAW_GITHUB_SOURCES)
-          return request({ uri: source(repo.fullName, fileName) })
-            .then(fileContents => (repo.files[fileName] = fileContents))
+          return github.repos(repo.fullName).contents(fileName).readBinary()
+            .then(res => (repo.files[fileName] = res))
             .catch(err => console.log(err))
         })
       }).then(() => repos)

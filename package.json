@@ -50,7 +50,6 @@
     "nodemon": "^1.10.0",
     "npm-run-all": "^2.3.0",
     "octokat": "^0.4.17",
-    "request-promise": "^4.1.0",
     "teacup": "^2.0.0",
     "uglify-js": "^2.7.0",
     "uglifyify": "^4.0.3"
