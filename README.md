@@ -36,6 +36,10 @@ To build minified javascript for production:
 
     npm run build
 
+### Enterprise
+
+Add a `rootURL` field to `data.json` with the endpoint needed.
+
 ## Deploy
 
 To deploy this, after merging any new PRs, follow these steps:

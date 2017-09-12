@@ -91,7 +91,10 @@ let RepoMatrix = (() => {
 
       FILES = [(README = 'README.md'), (LICENSE = 'LICENSE'), (CONTRIBUTE = 'CONTRIBUTE')]
 
-      github = new Octokat({ token: process.env.MAINTAINER_DASHBOARD })
+      github = new Octokat({
+        token  : process.env.MAINTAINER_DASHBOARD,
+        rootURL: config.rootURL,
+      })
 
       this.matrix = renderable(repos => {
         return table({ class: 'stripe order-column compact cell-border' }, () => {
