@@ -9,7 +9,7 @@
 const Promise = require('bluebird')
 const Octokat = require('octokat')
 const isGithubUserOrOrg = require('is-github-user-or-org')
-const { flatten, merge, round, sample, size, sortBy, split } = require('lodash')
+const { flatten, merge, round, size, sortBy, split } = require('lodash')
 const Wave = require('loading-wave')
 const $ = require('jquery')
 require('datatables.net')()
