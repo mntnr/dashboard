@@ -92,7 +92,7 @@ let RepoMatrix = (() => {
       FILES = [(README = 'README.md'), (LICENSE = 'LICENSE'), (CONTRIBUTE = 'CONTRIBUTE')]
 
       github = new Octokat({
-        token  : process.env.MAINTAINER_DASHBOARD,
+        token  : config.token || process.env.MAINTAINER_DASHBOARD,
         rootURL: config.rootURL,
       })
 
