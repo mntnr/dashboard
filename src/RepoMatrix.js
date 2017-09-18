@@ -33,12 +33,12 @@ let RepoMatrix = (() => {
           let name
           thead(() => {
             tr(() => {
-              th({ class: 'begin' }, () => {})
-              th({ class: 'left readme', colspan: 2 }, () => 'README.md')
-              th({ class: 'left files', colspan: 3 }, () => 'Files')
-              th({ class: 'left sections', colspan: size(vitality.readme.items) }, () => 'Sections')
+              th({ class: 'begin' }, () => 'Repository')
+              th({ class: 'left readme', colspan: 2, style: 'background-color:green' }, () => 'README.md')
+              th({ class: 'left files', colspan: 3, style: 'background-color:blue' }, () => 'Files')
+              th({ class: 'left sections', colspan: size(vitality.readme.items) - 1, style: 'background-color:orange' }, () => 'Sections')
               // th({ class: 'left badges', colspan: size(vitality.readme.badges) }, () => 'Badges')
-              return th({ class: 'left', colspan: 3 }, () => 'Github')
+              return th({ class: 'left', colspan: 3, style: 'background-color:black' }, () => 'Github')
             })
             return tr(() => {
               th({ class: 'left repo' }, () => 'Repo') // Name
