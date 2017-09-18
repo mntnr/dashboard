@@ -184,8 +184,8 @@ let RepoMatrix = (() => {
                   expectedMarkdown = template(fullName)
                   td({ class: 'no-padding' }, () => this.check((files[README] != null ? files[README].indexOf(expectedMarkdown) : undefined) >= 0))
                 }
-                td(() => (stargazersCount ? text(stargazersCount) : '?'))
-                return td(() => (openIssuesCount ? text(openIssuesCount) : '?'))
+                td(() => (stargazersCount ? text(stargazersCount) : '-'))
+                return td(() => (openIssuesCount ? text(openIssuesCount) : '-'))
               })
             )
           })
