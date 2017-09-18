@@ -39,8 +39,8 @@ let RepoMatrix = (() => {
       let CONTRIBUTE
       let README
       config = require('../data.json')
-      ORGS = config.orgs
-      INDIVIDUAL_REPOS = config.individualRepos
+      ORGS = config.orgs || []
+      INDIVIDUAL_REPOS = config.individualRepos || []
 
       README_BADGES = {
         Travis (repoFullName) {
