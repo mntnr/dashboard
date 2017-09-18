@@ -113,7 +113,7 @@ function loadRepos () {
         return github.repos.apply(null, repoName.split('/')).fetch().then(repo => {
           return repo // getPRCounts(repo)
         })
-      }).then(individualRepos => allRepos.concat(individualRepos))
+      }).then(individualRepos => allRepos[0].items.concat(individualRepos))
     })
     .then(repos => flatten(repos))
 }
