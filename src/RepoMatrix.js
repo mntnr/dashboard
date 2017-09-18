@@ -7,10 +7,12 @@
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
 
-const { merge, round, size, split } = require('lodash')
+const { round, size, split } = require('lodash')
+const $ = require('jquery')
 const lib = require('./lib/')
 const githubAPI = require('./githubAPI.js')
-const $ = require('jquery')
+const checkVitality = require('./checks.js')
+
 require('datatables.net')()
 require('datatables.net-fixedheader')()
 const { a, div, p, i, img, span, renderable, table, tbody, td, text, th, thead, tr } = require('teacup')
@@ -22,68 +24,12 @@ $.fn.center = function () {
   return this
 }
 
-// TODO Remove these three definitions
-let LICENSE
-let CONTRIBUTE
-let README
-
-let README_BADGES
-let README_SECTIONS
-let README_OTHER
-let README_ITEMS
-
 let RepoMatrix = (() => {
   var RepoMatrix = class RepoMatrix {
     static initClass () {
-      README_BADGES = {
-        Travis (repoFullName) {
-          return `(https://travis-ci.org/${repoFullName})`
-        },
-        Circle (repoFullName) {
-          return `(https://circleci.com/gh/${repoFullName})`
-        },
-        'Made By' () {
-          return '[![](https://img.shields.io/badge/made%20by-Protocol%20Labs-blue.svg?style=flat-square)](http://ipn.io)'
-        },
-        Project () {
-          return '[![](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](http://ipfs.io/)'
-        },
-        IRC () {
-          return '[![](https://img.shields.io/badge/freenode-%23ipfs-blue.svg?style=flat-square)](http://webchat.freenode.net/?channels=%23ipfs)'
-        }
-      }
-
-      README_SECTIONS = {
-        ToC () {
-          return 'Table of Contents'
-        },
-        Install () {
-          return '## Install'
-        },
-        Usage () {
-          return '## Usage'
-        },
-        Contribute () {
-          return '## Contribute'
-        },
-        License () {
-          return '## License'
-        }
-      }
-
-      README_OTHER = {
-        TODO () {
-          return 'TODO'
-        },
-        Banner () {
-          return '![](https://cdn.rawgit.com/jbenet/contribute-ipfs-gif/master/img/contribute.gif)'
-        }
-      }
-
-      README_ITEMS = merge(README_SECTIONS, README_OTHER)
-
       this.matrix = renderable(repos => {
         return table({ class: 'stripe order-column compact cell-border' }, () => {
+          var vitality = checkVitality()
           let name
           thead(() => {
             tr(() => {
@@ -91,8 +37,8 @@ let RepoMatrix = (() => {
               th({ class: 'left builds', colspan: 2 }, () => 'Builds')
               th({ class: 'left readme', colspan: 2 }, () => 'README.md')
               th({ class: 'left files', colspan: 3 }, () => 'Files')
-              th({ class: 'left sections', colspan: size(README_ITEMS) }, () => 'Sections')
-              th({ class: 'left badges', colspan: size(README_BADGES) }, () => 'Badges')
+              th({ class: 'left sections', colspan: size(vitality.readme.items) }, () => 'Sections')
+              // th({ class: 'left badges', colspan: size(vitality.readme.badges) }, () => 'Badges')
               return th({ class: 'left', colspan: 3 }, () => 'Github')
             })
             return tr(() => {
@@ -103,14 +49,12 @@ let RepoMatrix = (() => {
               th(() => '> 500 chars') // README.md
               th(() => 'license') // Files
               th(() => 'contribute') // Files
-              for (name in README_ITEMS) {
-                // Sections
-                th(() => name)
+              for (name in vitality.readme.sections) {
+                th(() => name) // Sections
               }
-              for (name in README_BADGES) {
-                // Badges
-                th(() => name)
-              }
+              // for (name in vitality.readme.badges) {
+              //   th(() => name) // Badges
+              // }
               th(() => 'Stars') // Github
               return th(() => 'Open Issues')
             })
@@ -119,8 +63,6 @@ let RepoMatrix = (() => {
           return tbody(() => {
             return Array.from(repos).map(({ fullName, files, stargazersCount, openIssuesCount }) =>
               tr(() => {
-                let expectedMarkdown
-                let template
                 let nameArray = split(fullName, '/')
 
                 td({ class: 'left repo-name' }, () => {
@@ -136,42 +78,37 @@ let RepoMatrix = (() => {
                     target: '_name'
                   }, () => nameArray[1])
                 })
-                console.log(files)
+
+                vitality = checkVitality(files, fullName, stargazersCount, openIssuesCount)
+
+                // TODO Extract these out into another check
                 td({ class: 'left' }, () => this.travis(fullName)) // Builds
                 td({ class: 'left' }, () => this.circle(fullName)) // Builds
-                td({ class: 'no-padding' }, () => this.check(files.README)) // README.md
-                td({ class: 'no-padding' }, () => this.check((files.README != null ? files.README.length : undefined) > 500)) // README.md
-                td({ class: 'no-padding' }, () => this.check(files.LICENSE)) // Files
-                td({ class: 'no-padding' }, () => this.check(files.CONTRIBUTE)) // Files
-                for (name in README_ITEMS) {
-                  // Badges
-                  template = README_ITEMS[name]
-                  expectedMarkdown = template(fullName)
+
+                td({ class: 'no-padding' }, () => this.renderCheck(vitality.readme.content)) // README.md
+                td({ class: 'no-padding' }, () => this.renderCheck(vitality.readme.charLength())) // README.md
+                td({ class: 'no-padding' }, () => this.renderCheck(vitality.license)) // Files
+                td({ class: 'no-padding' }, () => this.renderCheck(vitality.contribute)) // Files
+                for (name in vitality.readme.items) {
                   if (name === 'ToC') {
-                    if ((files.README != null ? files.README.split('\n').length : undefined) < 100) {
-                      td({ class: 'no-padding' }, () => this.check('na'))
-                    } else {
-                      td({ class: 'no-padding' }, () => this.check((files.README != null ? files.README.indexOf(expectedMarkdown) : undefined) >= 0))
-                    }
-                  } else if (name === 'Install' || name === 'Usage') {
-                    if (files.README != null ? files.README.match('This repository is (only for documents|a \\*\\*work in progress\\*\\*)\\.') : undefined) {
-                      td({ class: 'no-padding' }, () => this.check('na'))
-                    } else {
-                      td({ class: 'no-padding' }, () => this.check((files.README != null ? files.README.indexOf(expectedMarkdown) : undefined) >= 0))
-                    }
+                    td({ class: 'no-padding' }, () => this.renderCheck(vitality.readme.toc()))
+                  } else if (name === 'Usage' || name === 'Install') {
+                    td({ class: 'no-padding' }, () => this.renderCheck(vitality.readme.checkCodeSections(name)))
                   } else if (name === 'TODO') {
-                    td({ class: 'no-padding' }, () => this.check((files.README != null ? files.README.indexOf(expectedMarkdown) : undefined) === -1))
+                    td({ class: 'no-padding' }, () => this.renderCheck(vitality.readme.noTODOs()))
                   } else {
-                    td({ class: 'no-padding' }, () => this.check((files.README != null ? files.README.indexOf(expectedMarkdown) : undefined) >= 0))
+                    td({ class: 'no-padding' }, () => this.renderCheck(vitality.readme.section(name)))
                   }
                 }
-                for (name in README_BADGES) {
-                  template = README_BADGES[name]
-                  expectedMarkdown = template(fullName)
-                  td({ class: 'no-padding' }, () => this.check((files.README != null ? files.README.indexOf(expectedMarkdown) : undefined) >= 0))
-                }
-                td(() => (stargazersCount ? text(stargazersCount) : '-'))
-                return td(() => (openIssuesCount ? text(openIssuesCount) : '-'))
+
+                // TODO Reenable badges
+                // for (name in vitality.readme.badges) {
+                //   expectedMarkdown = vitality.readme.items[fullName]
+                //   td({ class: 'no-padding' }, () => this.renderCheck((files.README != null ? files.README.indexOf(expectedMarkdown) : undefined) >= 0))
+                // }
+
+                td(() => (stargazersCount ? text(stargazersCount) : ' '))
+                td(() => (openIssuesCount ? text(openIssuesCount) : ' '))
               })
             )
           })
@@ -180,10 +117,10 @@ let RepoMatrix = (() => {
       // td => (repo.openIssuesCount-repo.openPRsCount).toString()
       // td => repo.openPRsCount.toString()
 
-      this.check = renderable(success => {
+      this.renderCheck = renderable(success => {
         if (success === 'na') {
           return div({ class: 'na' }, () => {
-            i({ class: 'mdi mdi-minus' }, () => '-')
+            i({ class: 'mdi' }, () => ' ')
           })
         } else if (success) {
           return div({ class: 'success' }, () => {
