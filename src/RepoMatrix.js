@@ -10,7 +10,7 @@ const Promise = require('bluebird')
 const Octokat = require('octokat')
 const isGithubUserOrOrg = require('is-github-user-or-org')
 const { flatten, merge, round, size, sortBy, split } = require('lodash')
-const Wave = require('loading-wave')
+const lib = require('./lib/')
 const $ = require('jquery')
 require('datatables.net')()
 require('datatables.net-fixedheader')()
@@ -246,10 +246,10 @@ let RepoMatrix = (() => {
     }
 
     static start () {
-      this.wave = this.loadingWave()
+      this.wave = lib.wave.loadingWave()
       return this.loadRepos()
         .catch(err => {
-          this.killLoadingWave(this.wave)
+          lib.wave.killLoadingWave(this.wave)
           const errMsg = `Unable to access GitHub. <a href="https://status.github.com/">Is it down?</a>${err}`
           $(document.body).append(errMsg)
           throw err
@@ -257,28 +257,10 @@ let RepoMatrix = (() => {
         .then(repos => this.getFiles(repos))
         .then(repos => {
           this.repos = repos
-          return this.killLoadingWave(this.wave)
+          return lib.wave.killLoadingWave(this.wave)
         })
         .then(() => this.showMatrix(this.repos))
         .then(() => this.loadStats())
-    }
-
-    static loadingWave () {
-      const wave = Wave({
-        width : 162,
-        height: 62,
-        n     : 7,
-        color : '#959',
-      })
-      $(wave.el).center()
-      document.body.appendChild(wave.el)
-      wave.start()
-      return wave
-    }
-
-    static killLoadingWave (wave) {
-      wave.stop()
-      return $(wave.el).hide()
     }
 
     static getPRCounts (repo) {
