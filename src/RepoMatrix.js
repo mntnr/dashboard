@@ -34,7 +34,6 @@ let RepoMatrix = (() => {
           thead(() => {
             tr(() => {
               th({ class: 'begin' }, () => {})
-              th({ class: 'left builds', colspan: 2 }, () => 'Builds')
               th({ class: 'left readme', colspan: 2 }, () => 'README.md')
               th({ class: 'left files', colspan: 3 }, () => 'Files')
               th({ class: 'left sections', colspan: size(vitality.readme.items) }, () => 'Sections')
@@ -43,8 +42,6 @@ let RepoMatrix = (() => {
             })
             return tr(() => {
               th({ class: 'left repo' }, () => 'Repo') // Name
-              th({ class: 'left' }, () => 'Travis CI') // Builds
-              th({ class: 'left' }, () => 'Circle CI') // Builds
               th(() => 'exists') // README.md
               th(() => '> 500 chars') // README.md
               th(() => 'license') // Files
@@ -80,10 +77,6 @@ let RepoMatrix = (() => {
                 })
 
                 vitality = checkVitality(files, fullName, stargazersCount, openIssuesCount)
-
-                // TODO Extract these out into another check
-                td({ class: 'left' }, () => this.travis(fullName)) // Builds
-                td({ class: 'left' }, () => this.circle(fullName)) // Builds
 
                 td({ class: 'no-padding' }, () => this.renderCheck(vitality.readme.content)) // README.md
                 td({ class: 'no-padding' }, () => this.renderCheck(vitality.readme.charLength())) // README.md
@@ -132,28 +125,6 @@ let RepoMatrix = (() => {
           })
         }
       })
-
-      this.travis = renderable(repoFullName =>
-        div({ class: 'flex-wrapper' }, () => {
-          a({ href: `https://travis-ci.org/${repoFullName}` }, () =>
-            img({
-              src: `https://travis-ci.org/${repoFullName}.svg?branch=master`,
-              class: 'travis-badge-render-fix'
-            })
-          )
-        })
-      )
-
-      this.circle = renderable(repoFullName =>
-        div({ class: 'flex-wrapper' }, () => {
-          a({ href: `https://circleci.com/gh/${repoFullName}` }, () =>
-            img({
-              src: `https://circleci.com/gh/${repoFullName}.svg?style=svg`,
-              onError: "this.parentElement.href = 'https://circleci.com/add-projects'; this.src = 'images/circle-ci-no-builds.svg'"
-            })
-          )
-        })
-      )
 
       this.stats = renderable(info => {
         const { resources: { core: { limit, remaining, reset } } } = info
