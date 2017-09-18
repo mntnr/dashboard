@@ -15,7 +15,7 @@ const checkVitality = require('./checks.js')
 
 require('datatables.net')()
 require('datatables.net-fixedheader')()
-const { a, div, p, i, img, span, renderable, table, tbody, td, text, th, thead, tr } = require('teacup')
+const { a, div, p, i, span, renderable, table, tbody, td, text, th, thead, tr } = require('teacup')
 
 $.fn.center = function () {
   this.css('position', 'absolute')
