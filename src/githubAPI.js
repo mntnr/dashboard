@@ -71,8 +71,6 @@ function getFiles (repos) {
       // TODO Look into a package for this, if not, extract
       return github.repos(repo.fullName).contents(file.filenames[0]).readBinary()
         .then(res => {
-          console.log('Repo.files', repo.files)
-          console.log('file.name', file.name)
           return (repo.files[file.name.toUpperCase()] = res)
         })
         .catch(err => console.log(err))
