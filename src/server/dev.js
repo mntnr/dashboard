@@ -28,12 +28,12 @@ if IPFS is desired, make sure the server is running`)
 var startBrowserSync = () =>
   browserSync.init({
     startPath: 'public',
-    files    : 'public/*',
-    server   : {
-      baseDir   : './',
-      middleware: proxyIpfsCalls,
+    files: 'public/*',
+    server: {
+      baseDir: './',
+      middleware: proxyIpfsCalls
     },
-    logLevel: 'debug',
+    logLevel: 'debug'
   })
 
 var proxyIpfsCalls = (req, res, next) => {

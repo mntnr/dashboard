@@ -57,7 +57,7 @@ let RepoMatrix = (() => {
         },
         IRC () {
           return '[![](https://img.shields.io/badge/freenode-%23ipfs-blue.svg?style=flat-square)](http://webchat.freenode.net/?channels=%23ipfs)'
-        },
+        }
       }
 
       README_SECTIONS = {
@@ -75,7 +75,7 @@ let RepoMatrix = (() => {
         },
         License () {
           return '## License'
-        },
+        }
       }
 
       README_OTHER = {
@@ -210,12 +210,12 @@ let RepoMatrix = (() => {
         }
       })
 
-      this.travis = renderable(repoFullName => 
+      this.travis = renderable(repoFullName =>
         div({ class: 'flex-wrapper' }, () => {
-          a({ href: `https://travis-ci.org/${repoFullName}` }, () => 
-            img({ 
-              src: `https://travis-ci.org/${repoFullName}.svg?branch=master`, 
-              class: 'travis-badge-render-fix' 
+          a({ href: `https://travis-ci.org/${repoFullName}` }, () =>
+            img({
+              src: `https://travis-ci.org/${repoFullName}.svg?branch=master`,
+              class: 'travis-badge-render-fix'
             })
           )
         })
@@ -225,8 +225,8 @@ let RepoMatrix = (() => {
         div({ class: 'flex-wrapper' }, () => {
           a({ href: `https://circleci.com/gh/${repoFullName}` }, () =>
             img({
-              src    : `https://circleci.com/gh/${repoFullName}.svg?style=svg`,
-              onError: "this.parentElement.href = 'https://circleci.com/add-projects'; this.src = 'images/circle-ci-no-builds.svg'",
+              src: `https://circleci.com/gh/${repoFullName}.svg?style=svg`,
+              onError: "this.parentElement.href = 'https://circleci.com/add-projects'; this.src = 'images/circle-ci-no-builds.svg'"
             })
           )
         })
@@ -333,9 +333,9 @@ let RepoMatrix = (() => {
     static showMatrix (repos) {
       $('#matrix').append(this.matrix(repos))
       return $('table').DataTable({
-        paging     : false,
-        searching  : false,
-        fixedHeader: true,
+        paging: false,
+        searching: false,
+        fixedHeader: true
       })
     }
 

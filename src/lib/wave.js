@@ -3,10 +3,10 @@ const $ = require('jquery')
 
 function loadingWave () {
   const wave = Wave({
-    width : 162,
+    width: 162,
     height: 62,
-    n     : 7,
-    color : '#959',
+    n: 7,
+    color: '#959'
   })
   $(wave.el).center()
   document.body.appendChild(wave.el)
