@@ -6,11 +6,10 @@
  * DS207: Consider shorter variations of null checks
  * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
  */
-const Promise = require('bluebird')
-const Octokat = require('octokat')
-const isGithubUserOrOrg = require('is-github-user-or-org')
-const { flatten, merge, round, size, sortBy, split } = require('lodash')
+
+const { merge, round, size, split } = require('lodash')
 const lib = require('./lib/')
+const githubAPI = require('./githubAPI.js')
 const $ = require('jquery')
 require('datatables.net')()
 require('datatables.net-fixedheader')()
@@ -23,25 +22,19 @@ $.fn.center = function () {
   return this
 }
 
+// TODO Remove these three definitions
+let LICENSE
+let CONTRIBUTE
+let README
+
+let README_BADGES
+let README_SECTIONS
+let README_OTHER
+let README_ITEMS
+
 let RepoMatrix = (() => {
-  let config
-  let ORGS
-  let INDIVIDUAL_REPOS
-  let README_BADGES
-  let README_SECTIONS
-  let README_OTHER
-  let README_ITEMS
-  let FILES
-  let github
   var RepoMatrix = class RepoMatrix {
     static initClass () {
-      let LICENSE
-      let CONTRIBUTE
-      let README
-      config = require('../data.json')
-      ORGS = config.orgs || []
-      INDIVIDUAL_REPOS = config.individualRepos || []
-
       README_BADGES = {
         Travis (repoFullName) {
           return `(https://travis-ci.org/${repoFullName})`
@@ -84,17 +77,10 @@ let RepoMatrix = (() => {
         },
         Banner () {
           return '![](https://cdn.rawgit.com/jbenet/contribute-ipfs-gif/master/img/contribute.gif)'
-        },
+        }
       }
 
       README_ITEMS = merge(README_SECTIONS, README_OTHER)
-
-      FILES = [(README = 'README.md'), (LICENSE = 'LICENSE'), (CONTRIBUTE = 'CONTRIBUTE')]
-
-      github = new Octokat({
-        token  : config.token || process.env.MAINTAINER_DASHBOARD,
-        rootURL: config.rootURL,
-      })
 
       this.matrix = renderable(repos => {
         return table({ class: 'stripe order-column compact cell-border' }, () => {
@@ -137,52 +123,52 @@ let RepoMatrix = (() => {
                 let template
                 let nameArray = split(fullName, '/')
 
-
                 td({ class: 'left repo-name' }, () => {
-                  a({ 
-                    class: 'name-org', 
+                  a({
+                    class: 'name-org',
                     href: `https://github.com/${nameArray[0]}`,
                     target: '_name'
                   }, () => nameArray[0])
-                  span({ class: 'separator'  }, () => '/')
-                  a({ 
-                    class: 'name-repo', 
+                  span({class: 'separator'}, () => '/')
+                  a({
+                    class: 'name-repo',
                     href: `https://github.com/${nameArray[0]}/${nameArray[1]}`,
                     target: '_name'
                   }, () => nameArray[1])
                 })
+                console.log(files)
                 td({ class: 'left' }, () => this.travis(fullName)) // Builds
                 td({ class: 'left' }, () => this.circle(fullName)) // Builds
-                td({ class: 'no-padding' }, () => this.check(files[README])) // README.md
-                td({ class: 'no-padding' }, () => this.check((files[README] != null ? files[README].length : undefined) > 500)) // README.md
-                td({ class: 'no-padding' }, () => this.check(files[LICENSE])) // Files
-                td({ class: 'no-padding' }, () => this.check(files[CONTRIBUTE])) // Files
+                td({ class: 'no-padding' }, () => this.check(files.README)) // README.md
+                td({ class: 'no-padding' }, () => this.check((files.README != null ? files.README.length : undefined) > 500)) // README.md
+                td({ class: 'no-padding' }, () => this.check(files.LICENSE)) // Files
+                td({ class: 'no-padding' }, () => this.check(files.CONTRIBUTE)) // Files
                 for (name in README_ITEMS) {
                   // Badges
                   template = README_ITEMS[name]
                   expectedMarkdown = template(fullName)
                   if (name === 'ToC') {
-                    if ((files[README] != null ? files[README].split('\n').length : undefined) < 100) {
+                    if ((files.README != null ? files.README.split('\n').length : undefined) < 100) {
                       td({ class: 'no-padding' }, () => this.check('na'))
                     } else {
-                      td({ class: 'no-padding' }, () => this.check((files[README] != null ? files[README].indexOf(expectedMarkdown) : undefined) >= 0))
+                      td({ class: 'no-padding' }, () => this.check((files.README != null ? files.README.indexOf(expectedMarkdown) : undefined) >= 0))
                     }
                   } else if (name === 'Install' || name === 'Usage') {
-                    if (files[README] != null ? files[README].match('This repository is (only for documents|a \\*\\*work in progress\\*\\*)\\.') : undefined) {
+                    if (files.README != null ? files.README.match('This repository is (only for documents|a \\*\\*work in progress\\*\\*)\\.') : undefined) {
                       td({ class: 'no-padding' }, () => this.check('na'))
                     } else {
-                      td({ class: 'no-padding' }, () => this.check((files[README] != null ? files[README].indexOf(expectedMarkdown) : undefined) >= 0))
+                      td({ class: 'no-padding' }, () => this.check((files.README != null ? files.README.indexOf(expectedMarkdown) : undefined) >= 0))
                     }
                   } else if (name === 'TODO') {
-                    td({ class: 'no-padding' }, () => this.check((files[README] != null ? files[README].indexOf(expectedMarkdown) : undefined) === -1))
+                    td({ class: 'no-padding' }, () => this.check((files.README != null ? files.README.indexOf(expectedMarkdown) : undefined) === -1))
                   } else {
-                    td({ class: 'no-padding' }, () => this.check((files[README] != null ? files[README].indexOf(expectedMarkdown) : undefined) >= 0))
+                    td({ class: 'no-padding' }, () => this.check((files.README != null ? files.README.indexOf(expectedMarkdown) : undefined) >= 0))
                   }
                 }
                 for (name in README_BADGES) {
                   template = README_BADGES[name]
                   expectedMarkdown = template(fullName)
-                  td({ class: 'no-padding' }, () => this.check((files[README] != null ? files[README].indexOf(expectedMarkdown) : undefined) >= 0))
+                  td({ class: 'no-padding' }, () => this.check((files.README != null ? files.README.indexOf(expectedMarkdown) : undefined) >= 0))
                 }
                 td(() => (stargazersCount ? text(stargazersCount) : '-'))
                 return td(() => (openIssuesCount ? text(openIssuesCount) : '-'))
@@ -247,87 +233,20 @@ let RepoMatrix = (() => {
 
     static start () {
       this.wave = lib.wave.loadingWave()
-      return this.loadRepos()
+      return githubAPI.loadRepos()
         .catch(err => {
           lib.wave.killLoadingWave(this.wave)
           const errMsg = `Unable to access GitHub. <a href="https://status.github.com/">Is it down?</a>${err}`
           $(document.body).append(errMsg)
           throw err
         })
-        .then(repos => this.getFiles(repos))
+        .then(repos => githubAPI.getFiles(repos))
         .then(repos => {
-          this.repos = repos
-          return lib.wave.killLoadingWave(this.wave)
+          lib.wave.killLoadingWave(this.wave)
+          return this.showMatrix(repos)
         })
-        .then(() => this.showMatrix(this.repos))
-        .then(() => this.loadStats())
-    }
-
-    static getPRCounts (repo) {
-      // Throttled at 30 per minute. TODO Implement a good throttler here.
-      // Promise.resolve github.search.issues.fetch({q: 'type:pr is:open repo:' + repo.fullName})
-      //   .then (openPRs) =>
-      repo.openPRsCount = 'TODO' // openPRs.totalCount
-      return repo
-    }
-
-    // TODO Allow users as well as orgs
-    static loadRepos () {
-      return Promise.map(ORGS, org => {
-        return isGithubUserOrOrg(org, {token: config.token || process.env.MAINTAINER_DASHBOARD, endpoint: config.rootURL}).then(res => {
-          if (res === 'Organization') {
-            return github
-              .orgs(org)
-              .repos.fetch({ per_page: 100 })
-              .then(firstPage => this.thisAndFollowingPages(firstPage))
-              .then(repos => {
-                return Promise.map(repos, repo => {
-                  return this.getPRCounts(repo)
-                })
-              })
-          } else {
-            return github
-              .users(org)
-              .repos.fetch({ per_page: 100 })
-              .then(firstPage => this.thisAndFollowingPages(firstPage))
-              .then(repos => {
-                return Promise.map(repos, repo => {
-                  return this.getPRCounts(repo)
-                })
-              })
-          }
-        })
-      })
-        .then(allRepos => {
-          return Promise.map(INDIVIDUAL_REPOS, repoName => {
-            return github.repos.apply(null, repoName.split('/')).fetch().then(repo => {
-              return this.getPRCounts(repo)
-            })
-          }).then(individualRepos => {
-            return allRepos.concat(individualRepos)
-          })
-        })
-        .then(reposAllOrgs => {
-          const allRepos = flatten(reposAllOrgs)
-          return allRepos
-        })
-    }
-
-    // recursively fetch all "pages" (groups of up to 100 repos) from Github API
-    static thisAndFollowingPages (thisPage) {
-      if (thisPage.nextPage == null) {
-        return Promise.resolve(thisPage)
-      }
-      return thisPage
-        .nextPage()
-        .then(nextPage => {
-          return this.thisAndFollowingPages(nextPage)
-        })
-        .then(followingPages => {
-          const repos = thisPage
-          repos.push(...Array.from(followingPages || []))
-          return repos
-        })
+        .then(() => githubAPI.loadStats())
+        .then(info => $('#stats').append(this.stats(info)))
     }
 
     static showMatrix (repos) {
@@ -337,22 +256,6 @@ let RepoMatrix = (() => {
         searching: false,
         fixedHeader: true
       })
-    }
-
-    static getFiles (repos) {
-      repos = sortBy(repos, 'fullName')
-      return Promise.map(repos, repo => {
-        repo.files = {}
-        return Promise.map(FILES, fileName => {
-          return github.repos(repo.fullName).contents(fileName).readBinary()
-            .then(res => (repo.files[fileName] = res))
-            .catch(err => console.log(err))
-        })
-      }).then(() => repos)
-    }
-
-    static loadStats () {
-      return github.rateLimit.fetch().then(info => $('#stats').append(this.stats(info)))
     }
   }
   RepoMatrix.initClass()
