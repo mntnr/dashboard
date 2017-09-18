@@ -292,7 +292,7 @@ let RepoMatrix = (() => {
     // TODO Allow users as well as orgs
     static loadRepos () {
       return Promise.map(ORGS, org => {
-        return isGithubUserOrOrg(org).then(res => {
+        return isGithubUserOrOrg(org, {token: config.token || process.env.MAINTAINER_DASHBOARD, endpoint: config.rootURL}).then(res => {
           if (res === 'Organization') {
             return github
               .orgs(org)
