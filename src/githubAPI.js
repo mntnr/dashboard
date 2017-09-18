@@ -73,7 +73,11 @@ function getFiles (repos) {
         .then(res => {
           return (repo.files[file.name.toUpperCase()] = res)
         })
-        .catch(err => console.log(err))
+        .catch(err => {
+          if (err) {
+            // DO NOT LOG
+          }
+        })
     })
   }).then(() => repos)
 }
