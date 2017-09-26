@@ -127,6 +127,11 @@ let RepoMatrix = (() => {
       })
 
       this.stats = renderable(info => {
+        if (info.err === 'Rate limiting is not enabled.') {
+          return div({ class: 'stats' }, () => {
+            return p(() => text(`Github API rate limiting is not enabled`))
+          })
+        }
         const { resources: { core: { limit, remaining, reset } } } = info
         return div({ class: 'stats' }, () => {
           const now = new Date().getTime() / 1000 // seconds
@@ -154,7 +159,17 @@ let RepoMatrix = (() => {
           return this.showMatrix(repos)
         })
         .then(() => githubAPI.loadStats())
-        .then(info => $('#stats').append(this.stats(info)))
+        // This catch // then feels wrong, because I'm putting logic in two places.
+        .catch(err => {
+          if (err.message.toString().indexOf('Rate limiting is not enabled.') !== -1) {
+            $('#stats').append(this.stats({err: 'Rate limiting is not enabled.'}))
+          }
+        })
+        .then(info => {
+          if (info) {
+            $('#stats').append(this.stats(info))
+          }
+        })
     }
 
     static showMatrix (repos) {
