@@ -15,7 +15,7 @@ const ORGS = config.orgs || []
 const INDIVIDUAL_REPOS = config.individualRepos || []
 
 // TODO Map files better
-var README, LICENSE, CONTRIBUTE
+var README, LICENSE, CONTRIBUTING
 const files = [
   {
     'name': 'readme',
@@ -26,8 +26,8 @@ const files = [
     'filenames': ['LICENSE']
   },
   {
-    'name': 'contribute',
-    'filenames': ['CONTRIBUTE.md']
+    'name': 'contributing',
+    'filenames': ['CONTRIBUTING.md']
   }
 ]
 

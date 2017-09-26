@@ -85,7 +85,7 @@ function checkVitality (files, fullName, stargazersCount, openIssuesCount) {
       }
     },
     license: files.LICENSE,
-    contribute: files.CONTRIBUTE
+    contribute: files.CONTRIBUTING
   }
 
   return vitality
