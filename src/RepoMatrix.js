@@ -42,10 +42,10 @@ let RepoMatrix = (() => {
             })
             return tr(() => {
               th({ class: 'left repo' }, () => 'Repo') // Name
-              th(() => 'exists') // README.md
+              th(() => 'README') // README.md
               th(() => '> 500 chars') // README.md
-              th(() => 'license') // Files
-              th(() => 'contribute') // Files
+              th(() => 'LICENSE') // Files
+              th(() => 'CONTRIBUTING') // Files
               for (name in vitality.readme.sections) {
                 th(() => name) // Sections
               }
