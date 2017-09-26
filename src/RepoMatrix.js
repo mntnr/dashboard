@@ -35,7 +35,7 @@ let RepoMatrix = (() => {
             tr(() => {
               th({ class: 'begin' }, () => 'Repository')
               th({ class: 'left readme', colspan: 2, style: 'background-color:green' }, () => 'README.md')
-              th({ class: 'left files', colspan: 3, style: 'background-color:blue' }, () => 'Files')
+              th({ class: 'left files', colspan: 2, style: 'background-color:blue' }, () => 'Files')
               th({ class: 'left sections', colspan: size(vitality.readme.items) - 1, style: 'background-color:orange' }, () => 'Sections')
               // th({ class: 'left badges', colspan: size(vitality.readme.badges) }, () => 'Badges')
               return th({ class: 'left', colspan: 3, style: 'background-color:black' }, () => 'Github')
