@@ -47,16 +47,14 @@ function loadStats () {
 
 // recursively fetch all "pages" (groups of up to 100 repos) from Github API
 function thisAndFollowingPages (thisPage) {
-  if (thisPage.nextPage == null) {
-    return Promise.resolve(thisPage)
+  if (thisPage.nextPageUrl == null) {
+    return Promise.resolve(thisPage.items)
   }
   return thisPage
-    .nextPage()
-    .then(nextPage => {
-      return thisAndFollowingPages(nextPage)
-    })
+    .nextPage.fetch()
+    .then(nextPage => thisAndFollowingPages(nextPage))
     .then(followingPages => {
-      const repos = thisPage
+      const repos = thisPage.items
       repos.push(...Array.from(followingPages || []))
       return repos
     })
@@ -109,14 +107,16 @@ function loadRepos () {
       }
     })
   })
+    .then(repos => flatten(repos))
     .then(allRepos => {
       return Promise.map(INDIVIDUAL_REPOS, repoName => {
         return github.repos.apply(null, repoName.split('/')).fetch().then(repo => {
           return repo // getPRCounts(repo)
         })
-      }).then(individualRepos => allRepos[0].items.concat(individualRepos))
+      }).then(individualRepos => {
+        return allRepos.concat(individualRepos)
+      })
     })
-    .then(repos => flatten(repos))
 }
 
 module.exports = {
