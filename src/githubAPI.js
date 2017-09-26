@@ -6,7 +6,8 @@ const config = require('../data.json')
 
 const opts = {
   token: config.token || process.env.MAINTAINER_DASHBOARD,
-  endpoint: config.rootURL
+  endpoint: config.rootURL, // For gh-get deps
+  rootURL: config.rootURL // For Octokat
 }
 
 const github = new Octokat(opts)
