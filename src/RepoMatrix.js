@@ -58,7 +58,7 @@ let RepoMatrix = (() => {
           }) // Github
           // th => 'Open PRs'                  # Github
           return tbody(() => {
-            return Array.from(repos).map(({ fullName, files, stargazersCount, openIssuesCount }) =>
+            return Array.from(repos).filter(repo => !repo.private).map(({ fullName, files, stargazersCount, openIssuesCount }) =>
               tr(() => {
                 let nameArray = split(fullName, '/')
 
