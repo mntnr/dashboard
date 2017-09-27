@@ -145,6 +145,7 @@ let RepoMatrix = (() => {
     }
 
     static start () {
+      console.log('Starting webapp...')
       this.wave = lib.wave.loadingWave()
       return githubAPI.loadRepos()
         .catch(err => {
@@ -155,6 +156,7 @@ let RepoMatrix = (() => {
         })
         .then(repos => githubAPI.getFiles(repos))
         .then(repos => {
+          console.log('Repositories loaded...')
           lib.wave.killLoadingWave(this.wave)
           return this.showMatrix(repos)
         })
