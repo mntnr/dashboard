@@ -20,11 +20,11 @@ var README, LICENSE, CONTRIBUTING
 const files = [
   {
     'name': 'readme',
-    'filenames': ['README.md']
+    'filenames': ['README.md', 'README.rst']
   },
   {
     'name': 'license',
-    'filenames': ['LICENSE']
+    'filenames': ['LICENSE', 'LICENSE.md']
   },
   {
     'name': 'contributing',
@@ -65,20 +65,44 @@ function getFiles (repos) {
   return Promise.map(repos, repo => {
     repo.files = {}
     return Promise.map(files, file => {
-      // TODO Loop over possible filenames
       // TODO Get README using GitHub API for that
       // TODO Look into a package for this, if not, extract
-      return github.repos(repo.fullName).contents(file.filenames[0]).readBinary()
-        .then(res => {
-          return (repo.files[file.name.toUpperCase()] = res)
+      if (file.name === 'readme') {
+        // console.log('Above the README getter', repo.files[file.name.toUpperCase()])
+        return github.repos(repo.fullName).readme.fetch()
+          .then(res => res.readBinary())
+          .then(res => (repo.files[file.name.toUpperCase()] = res))
+          .catch(err => {
+            if (err) {
+              // console.log('Error getting README', err)
+              // DO NOT LOG.  It will show up in the dashboard.
+            }
+          })
+      } else if (file.name === 'license') {
+        return github.fromUrl(`/repos/${repo.fullName}/license`).fetch()
+          .then(res => res.readBinary())
+          .then(res => (repo.files[file.name.toUpperCase()] = res))
+          .catch(err => {
+            if (err) {
+              // console.log('Error getting license', err)
+              // DO NOT LOG. It will show up in the dashboard.
+            }
+          })
+      } else {
+        return Promise.map(file.filenames, filename => {
+          return github.repos(repo.fullName).contents(filename).readBinary()
+          .then(res => (repo.files[file.name.toUpperCase()] = res))
+          .catch(err => {
+            if (err) {
+              // DO NOT LOG
+            }
+          })
         })
-        .catch(err => {
-          if (err) {
-            // DO NOT LOG
-          }
-        })
+      }
     })
-  }).then(() => repos)
+  }).then((res) => {
+    return repos
+  })
 }
 
 function loadRepos () {
