@@ -36,6 +36,10 @@ To build minified javascript for production:
 
     npm run build
 
+### Token
+
+You will need a GitHub token in order to have more requests available to you, as this is a very request-heavy tool. Set it in your environment as `MAINTAINER_DASHBOARD`, or include this token in the `data.json` config in a `token` field.
+
 ### Enterprise
 
 Add a `rootURL` field to `data.json` with the endpoint needed.
