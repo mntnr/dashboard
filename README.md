@@ -58,7 +58,7 @@ To deploy this, after merging any new PRs, follow these steps:
 
 ## Contribute
 
-If you would like to contribute code to this repository, please dive in! Check out [the issues](//github.com/RichardLitt/maintainer-dashboard/issues).
+If you would like to contribute code to this repository, please dive in! Check out [the issues](//github.com/mntnr/dashboard/issues).
 
 ## License
 
