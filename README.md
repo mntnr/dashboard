@@ -3,9 +3,11 @@
 > Maintainer GitHub Dashboard
 
 This is a status board for repositories within a GitHub organization.
-It displays build health, and other measures that we care about internally.
+It displays build health, and other measures that your community should care about!
 
 Hosted on IPFS!
+
+![Screenshot](screenshot.png)
 
 ## Table of Contents
 
@@ -15,6 +17,7 @@ Hosted on IPFS!
 - [Deploy](#deploy)
 - [Contribute](#contribute)
 - [License](#license)
+
 
 ## Background
 
