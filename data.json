@@ -1,9 +1,6 @@
 {
   "orgs": [
-    "adventure-js"
+    "orbitdb"
   ],
-  "individualRepos": [
-    "RichardLitt/maintainer-dashboard",
-    "RichardLitt/knowledge"
-  ]
+  "token": "efd270d1f1a9a6ad564476bdedc021a2e9f5973d"
 }

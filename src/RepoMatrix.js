@@ -68,7 +68,7 @@ let RepoMatrix = (() => {
                     href: `https://github.com/${nameArray[0]}`,
                     target: '_name'
                   }, () => nameArray[0])
-                  span({class: 'separator'}, () => '/')
+                  span({ class: 'separator' }, () => '/')
                   a({
                     class: 'name-repo',
                     href: `https://github.com/${nameArray[0]}/${nameArray[1]}`,
@@ -78,19 +78,19 @@ let RepoMatrix = (() => {
 
                 vitality = checkVitality(files, fullName, stargazersCount, openIssuesCount)
 
-                td({ class: 'no-padding' }, () => this.renderCheck(vitality.readme.content)) // README.md
-                td({ class: 'no-padding' }, () => this.renderCheck(vitality.readme.charLength())) // README.md
-                td({ class: 'no-padding' }, () => this.renderCheck(vitality.license)) // Files
-                td({ class: 'no-padding' }, () => this.renderCheck(vitality.contribute)) // Files
+                td({ class: 'no-padding' }, () => this.renderCheck(!vitality.readme.content)) // README.md
+                td({ class: 'no-padding' }, () => this.renderCheck(!vitality.readme.charLength())) // README.md
+                td({ class: 'no-padding' }, () => this.renderCheck(!vitality.license)) // Files
+                td({ class: 'no-padding' }, () => this.renderCheck(!vitality.contribute)) // Files
                 for (name in vitality.readme.items) {
                   if (name === 'ToC') {
-                    td({ class: 'no-padding' }, () => this.renderCheck(vitality.readme.toc()))
+                    td({ class: 'no-padding' }, () => this.renderCheck(vitality.readme.toc()) === 'na' || !vitality.readme.toc())
                   } else if (name === 'Usage' || name === 'Install') {
-                    td({ class: 'no-padding' }, () => this.renderCheck(vitality.readme.checkCodeSections(name)))
+                    td({ class: 'no-padding' }, () => this.renderCheck(vitality.readme.checkCodeSections(name)) === 'na' || !vitality.readme.checkCodeSections(name))
                   } else if (name === 'TODO') {
-                    td({ class: 'no-padding' }, () => this.renderCheck(vitality.readme.noTODOs()))
+                    td({ class: 'no-padding' }, () => this.renderCheck(vitality.readme.noTODOs()) === 'na' || !vitality.readme.noTODOs())
                   } else {
-                    td({ class: 'no-padding' }, () => this.renderCheck(vitality.readme.section(name)))
+                    td({ class: 'no-padding' }, () => this.renderCheck(vitality.readme.section(name)) === 'na' || !vitality.readme.section(name))
                   }
                 }
 
@@ -164,7 +164,7 @@ let RepoMatrix = (() => {
         // This catch // then feels wrong, because I'm putting logic in two places.
         .catch(err => {
           if (err.message.toString().indexOf('Rate limiting is not enabled.') !== -1) {
-            $('#stats').append(this.stats({err: 'Rate limiting is not enabled.'}))
+            $('#stats').append(this.stats({ err: 'Rate limiting is not enabled.' }))
           }
         })
         .then(info => {
