@@ -47,7 +47,7 @@
     "jquery": "^3.2.1",
     "lightsaber": "^0.6.10",
     "loading-wave": "0.0.2",
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.13",
     "nodemon": "^1.12.1",
     "npm-run-all": "^4.1.1",
     "octokat": "^0.9.2",
